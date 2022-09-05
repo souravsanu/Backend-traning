@@ -1,4 +1,20 @@
 const blogModel = require("../models/blogModel");
+const authorModel = require("../models/authorModel");
+
+const createBlog = async function (req, res) {
+  try {
+    let data = req.body;
+    let authorId = data.authorId;
+    let author = await authorModel.findById({ _id: authorId });
+    if (!author) {
+      return res.status(404).send({ msg: "Enter a valid authorId" });
+    }
+    let createdBlog = await blogModel.create(data);
+    res.status(201).send({ data: createdBlog });
+  } catch (error) {
+    res.status(500).send({ msg: error.message });
+  }
+};
 
 const allBlogs = async function (req, res) {
   try {
@@ -28,24 +44,13 @@ const allBlogs = async function (req, res) {
   }
 };
 
-module.exports.allBlogs = allBlogs;
-const blogModel = require("../models/blogModel");
-const authorModel = require("../models/authorModel");
-
-const createBlog = async function (req, res) {
-  try {
-    let data = req.body;
-    let authorId = data.authorId;
-    let author = await authorModel.findById({ _id: authorId });
-    if (!author) {
-      return res.status(404).send({ msg: "Enter a valid authorId" });
-    }
-    let createdBlog = await blogModel.create(data);
-    res.status(201).send({ data: createdBlog });
-  } catch (error) {
-    res.status(500).send({ msg: error.message });
-  }
+const deleteBlog = async function (req, res) {
+  let blogId = req.params.blogId;
+  let newdata = await blogModel.findByIdAndDelete(blogId);
+  console.log(blogId);
+  res.send(blogId);
 };
 
+module.exports.allBlogs = allBlogs;
 module.exports.createBlog = createBlog;
-module.exports.createBlog = createBlog;
+module.exports.deleteBlog = deleteBlog;
