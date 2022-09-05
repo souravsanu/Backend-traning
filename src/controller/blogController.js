@@ -1,4 +1,5 @@
 const blogModel = require("../models/blogModel");
+const authorModel = require("../models/authorModel");
 const mongoose = require("mongoose");
 const moment = require("moment");
 
@@ -62,21 +63,20 @@ const updateBlog = async function (req, res) {
   }
 };
 
-const blogModel = require("../models/blogModel");
-const authorModel = require("../models/authorModel");
+
 
 const createBlog = async function (req, res) {
   try {
     let data = req.body;
     let authorId = data.authorId;
-    let author = await authorModel.findById({ _id: authorId });
+    let author = await authorModel.findOne({ _id: authorId });
     if (!author) {
-      return res.status(404).send({ msg: "Enter a valid authorId" });
+      return res.status(404).send({ msg: "Enter a valid authorId , author doesn't exists" });
     }
     let createdBlog = await blogModel.create(data);
     res.status(201).send({ data: createdBlog });
   } catch (error) {
-    res.status(400).send({ msg: error.message });
+    res.status(500).send({ msg: error.message });
   }
 };
 
