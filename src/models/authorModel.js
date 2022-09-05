@@ -21,7 +21,7 @@ const authorSchema = new mongoose.Schema({
             'Please add a valid email address.',
         ],
         required: true,
-         unique: true,
+        //  unique: true,
         lowercase: true,
     },
     password: {
