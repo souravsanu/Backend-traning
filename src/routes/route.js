@@ -8,4 +8,9 @@ router.get("/test-me", function (req, res) {
 });
 
 router.post("/authors", authorController.CreateAuthor);
+
+router.post("/blogs" , blogController.createBlog);
+
+
 module.exports = router;
+
