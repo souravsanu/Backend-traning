@@ -8,4 +8,8 @@ router.get("/test-me", function (req, res) {
 });
 
 router.post("/authors", authorController.CreateAuthor);
+
+// get api
+router.get("/blogs", blogController.allBlogs)
+
 module.exports = router;
