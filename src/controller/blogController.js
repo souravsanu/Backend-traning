@@ -1,6 +1,9 @@
 const blogModel = require("../models/blogModel");
+<<<<<<< HEAD
 const mongoose = require("mongoose");
 const moment = require("moment");
+=======
+>>>>>>> d1153cfca4d2c3f0e9c37663663ebbaa136b1625
 
 const allBlogs = async function (req, res) {
   try {
@@ -61,6 +64,9 @@ const updateBlog = async function (req, res) {
     res.status(500).send({ msg: err.message });
   }
 };
+module.exports.allBlogs = allBlogs;
+const blogModel = require("../models/blogModel");
+const authorModel = require("../models/authorModel");
 
 const createBlog = async function (req, res) {
   try {
@@ -73,10 +79,18 @@ const createBlog = async function (req, res) {
     let createdBlog = await blogModel.create(data);
     res.status(201).send({ data: createdBlog });
   } catch (error) {
+<<<<<<< HEAD
     res.status(400).send({ msg: error.message });
+=======
+    res.status(500).send({ msg: error.message });
+>>>>>>> d1153cfca4d2c3f0e9c37663663ebbaa136b1625
   }
 };
 
 module.exports.createBlog = createBlog;
+<<<<<<< HEAD
 module.exports.updateBlog = updateBlog;
 module.exports.allBlogs = allBlogs;
+=======
+module.exports.createBlog = createBlog;
+>>>>>>> d1153cfca4d2c3f0e9c37663663ebbaa136b1625
