@@ -9,7 +9,7 @@ Repository for backend cohort - Plutonium
 ### Models
 - Author Model
 ```
-{ fname: { mandatory}, lname: {mandatory}, title: {mandatory, enum[Mr, Mrs, Miss]}, email: {mandatory, valid email, unique}, password: {mandatory} }
+{ fname: { mandatory}, lname: {mandatory}, title: {mandatory, enum[Mr, Mrs, Miss]}, email: {mandatory, valid email, unique}, password: {mandatory}
 ```
 - Blogs Model
 ```
