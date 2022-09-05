@@ -1,7 +1,12 @@
 const authorModel = require("../models/authorModel");
 
 const CreateAuthor = async function (req, res) {
-  let authorDetails = req.body;
-  let autorId = authorDetails.authorId;
+  try {
+    let authorDetails = req.body;
+    let authorCreated = await authorModel.create(authorDetails);
+    res.status(200).send({ msg: authorCreated, status: true });
+  } catch (err) {
+    res.status(500).send({ msg: err.message });
+  }
 };
 module.exports.CreateAuthor = CreateAuthor;
