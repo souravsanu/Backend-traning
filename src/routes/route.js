@@ -11,5 +11,8 @@ router.post("/authors", authorController.CreateAuthor);
 
 // get api
 router.get("/blogs", blogController.allBlogs)
+router.post("/blogs" , blogController.createBlog);
+
 
 module.exports = router;
+
