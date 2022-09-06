@@ -7,12 +7,28 @@ router.get("/test-me", function (req, res) {
   res.send("My first ever api!");
 });
 
+//------------------------(create authors Api)----------------------------------
+
 router.post("/authors", authorController.CreateAuthor);
 
-// get api
-router.get("/blogs", blogController.allBlogs);
+//-------------------------(create blogs api)-----------------------------------
+
 router.post("/blogs", blogController.createBlog);
 
+//-------------------------(get blogs api)--------------------------------------
+
+router.get("/blogs", blogController.allBlogs);
+
+//--------------------------(update blogs api)----------------------------------
+
+//-------------------------(get blogs api)--------------------------------------
+
+router.get("/blogs", blogController.allBlogs);
+
+//--------------------------(update blogs api)----------------------------------
+
 router.put("/blogs/:blogId", blogController.updateBlog);
+
+router.get("/deleteBlog/:blogId", blogController.deleteBlog);
 
 module.exports = router;
