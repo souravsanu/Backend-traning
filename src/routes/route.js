@@ -9,7 +9,13 @@ router.get("/test-me", function (req, res) {
 
 router.post("/authors", authorController.CreateAuthor);
 
+// get api
+router.get("/blogs", blogController.allBlogs);
+
 router.post("/blogs", blogController.createBlog);
 
+router.put("/blogs/:blogId", blogController.updateBlog);
+
 router.get("/deleteBlog/:blogId", blogController.deleteBlog);
+
 module.exports = router;
