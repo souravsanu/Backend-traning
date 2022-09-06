@@ -2,6 +2,7 @@ const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
 const mongoose = require("mongoose");
 const moment = require("moment");
+
 const allBlogs = async function (req, res) {
   try {
     let { authorId, category, tag, subcategory } = req.query;
@@ -79,13 +80,90 @@ const createBlog = async function (req, res) {
   }
 };
 
-const deleteBlog = async function (req, res) {
-  let blogId = req.params.blogId;
-  let newdata = await blogModel.findByIdAndDelete(blogId);
-  console.log(blogId);
-  res.send(blogId);
+// const deleteBlog = async function (req, res) {
+//   let blogId = req.params.blogId;
+//   let newdata = await blogModel.findByIdAndDelete(blogId);
+//   console.log(blogId);
+//   res.send(blogId);
+// };
+
+//DELETE /blogs/:blogId - Mark is Deleted:true if the blogId exists and it is not deleted.
+const deleteBlogById = async function (req, res) {
+  try {
+    let id = req.params.blogId;
+
+    if (!validator.isValidObjectId(id)) {
+      return res
+        .status(400)
+        .send({ status: false, message: `BlogId is invalid.` });
+    }
+
+    let Blog = await blogModel.findOne({ _id: id });
+
+    if (!Blog) {
+      return res.status(400).send({ status: false, msg: "No such blog found" });
+    }
+    let data = await blogModel.findOne({ _id: id });
+    if (data.isDeleted == false) {
+      let Update = await blogModel.findOneAndUpdate(
+        { _id: id },
+        { isDeleted: true, deletedAt: Date() },
+        { new: true }
+      );
+      res.status(200).send({
+        status: true,
+        message: "successfully deleted blog",
+      });
+    } else {
+      return res
+        .status(404)
+        .send({ status: false, msg: "Blog already deleted" });
+    }
+  } catch (err) {
+    res.status(500).send({ status: false, Error: err.message });
+  }
 };
-module.exports.createBlog = createBlog;
-module.exports.updateBlog = updateBlog;
-module.exports.allBlogs = allBlogs;
-module.exports.deleteBlog = deleteBlog;
+
+// DELETE /blogs?queryParams - delete blogs by using specific queries or filters.
+// Delete blog documents by category, authorid, tag name, subcategory name, unpublished
+const deleteBlogByQuery = async function (req, res) {
+  try {
+    const filterQuery = { isDeleted: false, deletedAt: null };
+    const queryParams = req.query;
+    const authorIdFromToken = req.authorId;
+
+    if (!validator.isValidObjectId(authorIdFromToken)) {
+      res.status(400).send({
+        status: false,
+        message: `${authorIdFromToken} is not a valid token id`,
+      });
+      return;
+    }
+
+    if (!validator.isValidRequestBody(queryParams)) {
+      res.status(400).send({
+        status: false,
+        message: "No query params received. Aborting delete operation",
+      });
+      return;
+    }
+
+    const { authorId, category, tags, subcategory, isPublished } = queryParams;
+
+    if (validator.isValid(authorId) && validator.isValidObjectId(authorId)) {
+      filterQuery["authorId"] = authorId;
+    }
+    if (validator.isValid(category)) {
+      filterQuery["category"] = category.trim();
+    }
+    if (validator.isValid(tags)) {
+      const tagsArr = tags
+        .trim()
+        .split(",")
+        .map((tag) => tag.trim());
+    }
+  } catch (err) {
+    res.status(500).send({ msg: err.message });
+  }
+};
+module.exports = { createBlog, updateBlog, allBlogs, deleteBlogById };
