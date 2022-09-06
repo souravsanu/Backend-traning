@@ -153,17 +153,18 @@ const deleteBlogByQuery = async function (req, res) {
     if (validator.isValid(authorId) && validator.isValidObjectId(authorId)) {
       filterQuery["authorId"] = authorId;
     }
-    if (validator.isValid(category)) {
-      filterQuery["category"] = category.trim();
+     if (validator.isValid(category)){filterQuery["category"]= category.trim()
     }
-    if (validator.isValid(tags)) {
-      const tagsArr = tags
-        .trim()
-        .split(",")
-        .map((tag) => tag.trim());
-    }
-  } catch (err) {
-    res.status(500).send({ msg: err.message });
+if (validator.isValid(tags)){
+  const tagsArr = tags .trim().split(",").map((tag) => tag.trim())
+}
+
+    
+
   }
-};
-module.exports = { createBlog, updateBlog, allBlogs, deleteBlogById };
+module.exports = {createBlog,updateBlog,allBlogs,deleteBlogById}
+
+module.exports.createBlog = createBlog;
+module.exports.updateBlog = updateBlog;
+module.exports.allBlogs = allBlogs;
+module.exports.deleteBlog = deleteBlog;

@@ -4,12 +4,15 @@ const validator = require("../utils/validator");
 const createAuthor = async function (req, res) {
   try {
 <<<<<<< HEAD
+<<<<<<< HEAD
     let authorDetails = req.body;
     let authorCreated = await authorModel.create(authorDetails);
     res.status(201).send({ msg: authorCreated, status: true });
   } catch (err) {
     res.status(500).send({ msg: err.message });
 =======
+=======
+>>>>>>> b4cd64a0223c6d39a6c07e8878eba67a720aaa1e
     // Request body verifying
     let requestBody = req.body;
 
@@ -82,6 +85,9 @@ const createAuthor = async function (req, res) {
     });
   } catch (error) {
     res.status(500).send({ status: false, Error: error.message });
+<<<<<<< HEAD
+>>>>>>> b4cd64a0223c6d39a6c07e8878eba67a720aaa1e
+=======
 >>>>>>> b4cd64a0223c6d39a6c07e8878eba67a720aaa1e
   }
 };
