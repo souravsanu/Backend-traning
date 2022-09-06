@@ -3,16 +3,6 @@ const validator = require("../utils/validator");
 //Creating Author documents by validating the details.
 const createAuthor = async function (req, res) {
   try {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    let authorDetails = req.body;
-    let authorCreated = await authorModel.create(authorDetails);
-    res.status(201).send({ msg: authorCreated, status: true });
-  } catch (err) {
-    res.status(500).send({ msg: err.message });
-=======
-=======
->>>>>>> b4cd64a0223c6d39a6c07e8878eba67a720aaa1e
     // Request body verifying
     let requestBody = req.body;
 
@@ -53,9 +43,8 @@ const createAuthor = async function (req, res) {
         .status(400)
         .send({ status: false, message: `Email is required` });
     }
-
     //Email validation whether it is entered perfectly or not.
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+    if (!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(email)) {
       res.status(400).send({
         status: false,
         message: `Email should be a valid email address`,
@@ -68,7 +57,7 @@ const createAuthor = async function (req, res) {
         .status(400)
         .send({ status: false, message: `Password is required` });
     }
-    const isEmailAlredyUsed = await authorModel.findOne({ email });
+    const isEmailAlredyUsed = await authorModel.findOne({ email: email });
     if (isEmailAlredyUsed) {
       return res.status(400).send({
         status: false,
@@ -76,7 +65,7 @@ const createAuthor = async function (req, res) {
       });
     }
     //validation Ends
-
+    //author created
     const newAuthor = await authorModel.create(requestBody);
     res.status(201).send({
       status: true,
@@ -85,10 +74,6 @@ const createAuthor = async function (req, res) {
     });
   } catch (error) {
     res.status(500).send({ status: false, Error: error.message });
-<<<<<<< HEAD
->>>>>>> b4cd64a0223c6d39a6c07e8878eba67a720aaa1e
-=======
->>>>>>> b4cd64a0223c6d39a6c07e8878eba67a720aaa1e
   }
 };
 

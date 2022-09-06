@@ -7,8 +7,8 @@ const blogSchema = new mongoose.Schema(
     body: { type: String, require: true },
     authorId: { type: objectId, require: true, ref: "Author" },
     tags: { type: [] },
-    category: { type: String, require: true }, //examples: [technology, entertainment, life style, food, fashion]
-    subcategory: { type: [] }, //examples[technology-[web development, mobile development, AI, ML etc]]
+    category: { type: String, require: true },
+    subcategory: { type: [] },
     deletedAt: { type: Date },
     isDeleted: { type: Boolean, default: false },
     publishedAt: { type: Date },

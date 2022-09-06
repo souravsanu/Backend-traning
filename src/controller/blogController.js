@@ -2,26 +2,29 @@ const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
 const mongoose = require("mongoose");
 const moment = require("moment");
+const validator = require("../utils/validator");
 
 const allBlogs = async function (req, res) {
   try {
-    let { authorId, category, tag, subcategory } = req.query;
-    console.log(tag);
+    let { authorId, category, tags, subcategory } = req.query;
+    console.log(tags);
     let query = {};
     if (authorId != null) query.authorId = authorId;
     if (category != null) query.category = category;
-    if (tag != null) query.tags = tag;
+    if (tags != null) query.tags = tags;
     if (subcategory != null) query.subcategory = subcategory;
 
-    let totalBlogs = await blogModel.find(
-      { isDeleted: false },
-      { isPublished: true }
-    );
+    let totalBlogs = await blogModel.find({
+      isDeleted: false,
+      isPublished: true,
+    });
 
     if (totalBlogs.length === 0) {
       res
         .status(404)
         .send({ status: false, msg: "None of the Blogs are Published" });
+    } else if (Object.keys(query).length === 0) {
+      res.status(200).send({ status: true, msg: totalBlogs });
     } else {
       let finalFilter = await blogModel.find(query);
       res.status(200).send({ status: true, msg: finalFilter });
@@ -65,27 +68,58 @@ const updateBlog = async function (req, res) {
 
 const createBlog = async function (req, res) {
   try {
-    let data = req.body;
-    let authorId = data.authorId;
-    let author = await authorModel.findOne({ _id: authorId });
-    if (!author) {
-      return res
-        .status(404)
-        .send({ msg: "Enter a valid authorId , author doesn't exists" });
+    const requestBody = req.body;
+    if (!validator.isValidRequestBody(requestBody)) {
+      return res.status(400).send({
+        status: false,
+        message: "Invalid request parameters. Please provide blog details",
+      });
     }
-    let createdBlog = await blogModel.create(data);
-    res.status(201).send({ data: createdBlog });
-  } catch (error) {
-    res.status(500).send({ msg: error.message });
+
+    //Extract params
+    const { title, body, authorId, tags, category, subcategory, isPublished } =
+      requestBody;
+
+    // Validation starts
+    if (!validator.isValid(title)) {
+      return res
+        .status(400)
+        .send({ status: false, message: "Blog Title is required" });
+    }
+    if (!validator.isValid(body)) {
+      return res
+        .status(400)
+        .send({ status: false, message: "Blog body is required" });
+    }
+    if (!validator.isValid(authorId)) {
+      return res
+        .status(400)
+        .send({ status: false, message: "Author id is required" });
+    }
+    if (!validator.isValidObjectId(authorId)) {
+      return res.status(400).send({
+        status: false,
+        message: `${authorId} is not a valid author id`,
+      });
+    }
+    const findAuthor = await authorModel.findById(authorId);
+    if (!findAuthor) {
+      return res
+        .status(400)
+        .send({ status: false, message: `Author does not exists.` });
+    }
+    if (!validator.isValid(category)) {
+      return res
+        .status(400)
+        .send({ status: false, message: "Blog category is required" });
+    }
+    //After validation blog created
+    let created = await blogModel.create(requestBody);
+    res.status(201).send({ msg: created });
+  } catch (err) {
+    res.status(500).send({ msg: err.message });
   }
 };
-
-// const deleteBlog = async function (req, res) {
-//   let blogId = req.params.blogId;
-//   let newdata = await blogModel.findByIdAndDelete(blogId);
-//   console.log(blogId);
-//   res.send(blogId);
-// };
 
 //DELETE /blogs/:blogId - Mark is Deleted:true if the blogId exists and it is not deleted.
 const deleteBlogById = async function (req, res) {
@@ -98,13 +132,12 @@ const deleteBlogById = async function (req, res) {
         .send({ status: false, message: `BlogId is invalid.` });
     }
 
-    let Blog = await blogModel.findOne({ _id: id });
+    let Blog = await blogModel.findById(id);
 
     if (!Blog) {
-      return res.status(400).send({ status: false, msg: "No such blog found" });
+      return res.status(404).send({ status: false, msg: "No such blog found" });
     }
-    let data = await blogModel.findOne({ _id: id });
-    if (data.isDeleted == false) {
+    if (Blog.isDeleted == false) {
       let Update = await blogModel.findOneAndUpdate(
         { _id: id },
         { isDeleted: true, deletedAt: Date() },
@@ -128,42 +161,45 @@ const deleteBlogById = async function (req, res) {
 // Delete blog documents by category, authorid, tag name, subcategory name, unpublished
 const deleteBlogByQuery = async function (req, res) {
   try {
-    const filterQuery = { isDeleted: false, deletedAt: null };
+    const filterQuery = {
+      isDeleted: false,
+      deletedAt: null,
+    };
     const queryParams = req.query;
-    const authorIdFromToken = req.authorId;
-
-    if (!validator.isValidObjectId(authorIdFromToken)) {
-      res.status(400).send({
-        status: false,
-        message: `${authorIdFromToken} is not a valid token id`,
-      });
-      return;
-    }
 
     if (!validator.isValidRequestBody(queryParams)) {
-      res.status(400).send({
+      return res.status(400).send({
         status: false,
         message: "No query params received. Aborting delete operation",
       });
-      return;
     }
 
-    const { authorId, category, tags, subcategory, isPublished } = queryParams;
+    const { authorId, category, tags, subcategory } = queryParams;
 
     if (validator.isValid(authorId) && validator.isValidObjectId(authorId)) {
       filterQuery["authorId"] = authorId;
     }
     if (validator.isValid(category)) {
-      filterQuery["category"] = category.trim();
+      filterQuery["category"] = category;
     }
     if (validator.isValid(tags)) {
-      const tagsArr = tags
-        .trim()
-        .split(",")
-        .map((tag) => tag.trim());
+      filterQuery["tags"] = tags;
     }
+    if (validator.isValid(subcategory)) {
+      filterQuery["subcategory"] = subcategory;
+    }
+    console.log(filterQuery);
+    //filtered blogs are marked isDeleted=true
+    let deleted = await blogModel.updateMany(filterQuery, { isDeleted: true });
+    res.status(200).send({ msg: "Blogs deleted.." });
   } catch (err) {
     res.status(500).send({ msg: err.message });
   }
 };
-module.exports = { createBlog, updateBlog, allBlogs, deleteBlogById };
+module.exports = {
+  createBlog,
+  updateBlog,
+  allBlogs,
+  deleteBlogById,
+  deleteBlogByQuery,
+};
