@@ -1,4 +1,6 @@
 const blogModel = require("../models/blogModel");
+const authorModel = require("../models/authorModel");
+
 const mongoose = require("mongoose");
 const moment = require("moment");
 
@@ -61,9 +63,6 @@ const updateBlog = async function (req, res) {
     res.status(500).send({ msg: err.message });
   }
 };
-
-const blogModel = require("../models/blogModel");
-const authorModel = require("../models/authorModel");
 
 const createBlog = async function (req, res) {
   try {
