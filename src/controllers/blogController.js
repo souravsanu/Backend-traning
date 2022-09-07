@@ -49,7 +49,7 @@ const getBlogs = async function (req, res) {
         }
 
         let data = await blogModel.findOne(filters).populate("authorId")
-        if (!data) res.status(404).send({ status: false, msg: "file not found!" })
+        if (!data) return res.status(404).send({ status: false, msg: "file not found!" })
         return res.status(200).send({ status: true, data: data })
 
     }
