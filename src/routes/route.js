@@ -10,19 +10,27 @@ const middleware = require("../middlewares/auth")
 router.get("/test-me", function (req, res) {
     res.send("My first ever api!")
 })
-
+// ===========================================================
+//creaet author
 router.post("/authors", authorcontroller.createAuthor)
+
+//login
 router.post("/login", authorcontroller.login)
 
+//create blogs
 router.post("/blogs", middleware.authenticate, blogcontroller.createBlog)
 
+//find
 router.get("/blogs", middleware.authenticate, blogcontroller.getBlogs)
 
-router.put("/blogs/:blogId", middleware.mid1, middleware.authenticate, middleware.authorise, blogcontroller.updateBlog)
-//delete
-router.delete("/blogs/:blogId", middleware.mid1, middleware.authenticate, middleware.authorise, blogcontroller.deleteBlogsParam)
+//update
+router.put("/blogs/:blogId", middleware.blogAuthorise, middleware.authenticate, middleware.authorise, blogcontroller.updateBlog)
 
-router.delete("/blogs", middleware.authenticate, middleware.authorise, blogcontroller.deleteBlogsQuery)
+//delete
+router.delete("/blogs/:blogId", middleware.blogAuthorise, middleware.authenticate, middleware.authorise, blogcontroller.deleteBlogsParam)
+
+//delete
+router.delete("/blogs", middleware.authenticate, middleware.deleteAuthorised, blogcontroller.deleteBlogsQuery)
 
 
 

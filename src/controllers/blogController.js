@@ -15,7 +15,7 @@ const createBlog = async function (req, res) {
 
         let correctAuthorId = await authorModel.findById(AuthorId)
         if (!correctAuthorId) return res.status(404).send({ status: false, msg: "AuthorId is not Valid" })
-        
+
         if (data.isPublished) {
             data.publishedAt = today
         }
@@ -31,15 +31,15 @@ const createBlog = async function (req, res) {
     }
 
 }
-
+// =============================================================================================
 const getBlogs = async function (req, res) {
 
     try {
         let filters = req.query;
-       
-        if (Object.keys(filters).length ==0) {
-            
-            let data = await blogModel.find({isDeleted:false,isPublished:true})
+
+        if (Object.keys(filters).length == 0) {
+
+            let data = await blogModel.find({ isDeleted: false, isPublished: true })
             return res.status(200).send({ status: true, data: data })
         }
         filters["isDeleted"] = false;
@@ -57,22 +57,13 @@ const getBlogs = async function (req, res) {
         res.status(500).send({ status: false, msg: error.message })
     }
 }
+// =============================================================================================
 
 const updateBlog = async function (req, res) {
     try {
         let blogId = req.params.blogId;
-        if (!blogId)
-            return res.status(404).send({ status: false, msg: "enter a blog ID" })
-        if (blogId.length > 24 || blogId.length < 24)
-            return res.status(400).send({ status: false, msg: "Invalid ID" })
-        let valid = await blogModel.findById(blogId)
-        if (!valid)
-            return res.status(404).send({ status: false, msg: "invalid blog ID" })
-        if (valid.isDeleted == true)
-            return res.status(404).send({ status: false, msg: "no such blog exists" })
-       
         let updates = req.body
-        if (Object.keys(updates).length ==0)
+        if (Object.keys(updates).length == 0)
             return res.status(400).send({ status: false, msg: "send something to update" })
         let stringUpdates = {
             isPublished: true,
@@ -88,52 +79,38 @@ const updateBlog = async function (req, res) {
         if (updates["subcategory"])
             arrayUpdates["subcategory"] = updates.subcategory;
 
-        let updatedBlog = await blogModel.findByIdAndUpdate({ _id: blogId }, { $set: stringUpdates, $push: arrayUpdates }, { new: true })
+        let updatedBlog = await blogModel.findByIdAndUpdate({ _id:blogId }, { $set: stringUpdates, $push: arrayUpdates }, { new: true })
         return res.status(200).send({ status: true, data: updatedBlog })
     }
     catch (error) {
         res.status(500).send({ status: false, msg: error.message })
     }
 }
+// =============================================================================================
 
 const deleteBlogsParam = async (req, res) => {
     try {
-        let iDfromParams = req.params.blogId
-        if (!iDfromParams)
-            return res.status(400).send({ status: false, msg: "pleas enter  ID" })
-        if (iDfromParams.length > 24 || iDfromParams.length < 24)
-        return res.status(400).send({ status: false, msg: "Invalid ID" })
 
-        let data03 = await blogModel.findById(iDfromParams)
-      
-        if (!data03)
-            res.status(400).send({ status: false, msg: "Invalid ID" })
-        if (data03.isDeleted) {
-            return res.status(404).send({ status: false, msg: "blog document doesn't exist" })
-        }
-       
-         await blogModel.updateOne((data03), { $set: { isDeleted: true , deletedAt: today } })
+        await blogModel.updateOne((req.valid), { $set: { isDeleted: true, deletedAt: today } })
         return res.status(200).send()
     }
     catch (error) {
         res.status(500).send({ status: false, msg: error.message })
     }
 }
+// =============================================================================================
 
 const deleteBlogsQuery = async function (req, res) {
-    try {
-        let data = req.query
-        if (Object.keys(data).length ==0)
-            return res.status(400).send({ status: false, msg: "please enter data to update" })
-        const data1 = await blogModel.findOne(data)
-        if (!data1)
-            return res.status(400).send({ status: false, msg: "invalid data" })
-            
-        if (data1.isDeleted) {
+    try {     
+       let data = req.data
+       
+        if (data.isDeleted) {
             return res.status(404).send({ status: false, msg: "blog document doesn't exist" })
         }
-
-        const data2 = await blogModel.updateMany(data1, { $set: { isDeleted: true, deletedAt: today } })
+        if (data.isPublished) {
+            return res.status(404).send({ status: false, msg: "blog document doesn't exist" })
+        }
+        const data2 = await blogModel.updateMany(data, { $set: { isDeleted: true, deletedAt: today } })
         res.status(200).send({ status: true, data: data2 })
 
     } catch (error) {
@@ -141,4 +118,4 @@ const deleteBlogsQuery = async function (req, res) {
     }
 }
 
-module.exports ={ getBlogs,createBlog,updateBlog,deleteBlogsParam,deleteBlogsQuery}
+module.exports = { getBlogs, createBlog, updateBlog, deleteBlogsParam, deleteBlogsQuery }
