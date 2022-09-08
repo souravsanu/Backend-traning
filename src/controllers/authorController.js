@@ -40,26 +40,22 @@ const createAuthor = async function (req, res) {
 // ==========================================================================================================
 
 const login = async function (req, res) {
-    try {
-        let email = req.body.email;
-        if (!email)
-            return res.status(400).send({ msg: "enter email", });
+    let email = req.body.email;
+    let password = req.body.password;
+    if (!email)
+        return res.status(400).send({ status: false, msg: "Please Input Email" });
 
-        let password = req.body.password;
-        if (!password)
-            return res.status(400).send({ msg: "enter password", });
+    if (!password)
+        return res.status(400).send({ status: false, msg: "Please Input Password" });
 
-        let user = await authorModel.findOne({ email: email, password: password });
-        if (!user)
-            return res.status(400).send({ msg: "email or the password is not corerct", });
-        let payload = user._id;
-        let token = jwt.sign({ payload }, "room-no-11");
-        res.setHeader("x-api-key", token);
-        return res.status(200).send({ status: true, data: token });
-    }
-    catch (error) { return res.status(500).send({status:false,msg: error.message }) }
-};
+    let authorData = await authorModel.findOne({ email: email, password: password });
+
+    if (!authorData)
+        return res.status(400).send({ status: false, msg: "No User Found With These Credentials" });
+
+    let token = jwt.sign({ authorid: authorData._id, email: authorData.email }, "room-no-11");
+    res.setHeader("x-api-key", token);
+    return res.status(200).send({ status: true, data: { token: token } })
+}
+
 module.exports = { createAuthor, login }
-
-
-

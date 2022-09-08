@@ -2,7 +2,7 @@ const authorModel = require("../models/authorModel")
 const blogModel = require("../models/blogModel")
 let timeElapsed = Date.now();
 let today = new Date(timeElapsed);
-
+// =================================createBlog====================================================
 const createBlog = async function (req, res) {
     try {
         let data = req.body
