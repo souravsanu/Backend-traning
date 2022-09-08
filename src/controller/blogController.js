@@ -53,17 +53,21 @@ const createBlog = async function (req, res) {
         message: "Blog category is required,only alphbets allowed.",
       });
     }
-    if (!validator.isStringsArray(tags)) {
-      return res.status(400).send({
-        status: false,
-        message: "Blog tags is required and it is an array of strings.",
-      });
+    if (tags.length > 0) {
+      if (!validator.isStringsArray(tags)) {
+        return res.status(400).send({
+          status: false,
+          message: "Blog tags is an array of strings.",
+        });
+      }
     }
-    if (!validator.isStringsArray(subcategory)) {
-      return res.status(400).send({
-        status: false,
-        message: "Blog subcategory is required and it is an array of strings.",
-      });
+    if (subcategory.length > 0) {
+      if (!validator.isStringsArray(subcategory)) {
+        return res.status(400).send({
+          status: false,
+          message: "Blog subcategory is an array of strings.",
+        });
+      }
     }
     //After validation blog created
     let created = await blogModel.create(requestBody);
