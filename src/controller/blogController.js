@@ -25,13 +25,13 @@ const createBlog = async function (req, res) {
     if (!validator.isValid(title)) {
       return res.status(400).send({
         status: false,
-        message: "Blog Title is required,First letter must be capital.",
+        message: "Blog Title is required,only alphbets allowed.",
       });
     }
     if (!validator.isValid(body)) {
       return res.status(400).send({
         status: false,
-        message: "Blog body is required,First letter must be capital.",
+        message: "Blog body is required,only alphbets allowed.",
       });
     }
 
@@ -50,7 +50,7 @@ const createBlog = async function (req, res) {
     if (!validator.isValid(category)) {
       return res.status(400).send({
         status: false,
-        message: "Blog category is required,First letter must be capital.",
+        message: "Blog category is required,only alphbets allowed.",
       });
     }
     if (!validator.isStringsArray(tags)) {
@@ -76,9 +76,15 @@ const createBlog = async function (req, res) {
 const getBlogs = async function (req, res) {
   try {
     let { authorId, category, tags, subcategory } = req.query;
-    // console.log(tags);
+    console.log(authorId);
     let query = {};
-    if (authorId != null) query.authorId = authorId;
+    if (authorId) {
+      if (!validator.isValidObjectId(authorId)) {
+        return res.status(403).send({ msg: " invalid authorId.." });
+      } else {
+        query.authorId = authorId;
+      }
+    }
     if (category != null) query.category = category;
     if (tags != null) query.tags = tags;
     if (subcategory != null) query.subcategory = subcategory;
@@ -120,12 +126,34 @@ const updateBlog = async function (req, res) {
         message: " Please provide updation details in body",
       });
     }
-    if (validator.isValid(req.body.title)) blog.title = req.body.title;
-    if (validator.isValid(req.body.body)) blog.body = req.body.body;
-    if (validator.isStringsArray(req.body.tags))
-      blog.tags = [...blog.tags, ...req.body.tags];
-    if (validator.isStringsArray(req.body.subcategory))
-      blog.subcategory = [...blog.subcategory, ...req.body.subcategory];
+    if (req.body.title) {
+      if (validator.isValid(req.body.title)) {
+        blog.title = req.body.title;
+      } else {
+        return res.status(400).send({
+          status: false,
+          message: "Only alphbets allowed.",
+        });
+      }
+    }
+    if (req.body.body) {
+      if (validator.isValid(req.body.body)) {
+        blog.body = req.body.body;
+      } else {
+        return res.status(400).send({
+          status: false,
+          message: "Only alphbets allowed.",
+        });
+      }
+    }
+    if (req.body.tags) {
+      if (validator.isStringsArray(req.body.tags))
+        blog.tags = [...blog.tags, ...req.body.tags];
+    }
+    if (req.body.subcategory) {
+      if (validator.isStringsArray(req.body.subcategory))
+        blog.subcategory = [...blog.subcategory, ...req.body.subcategory];
+    }
     blog.isPublished = true;
     blog.publishedAt = moment();
     let blog2 = await blogModel.findByIdAndUpdate({ _id: id }, blog, {
@@ -197,11 +225,9 @@ const deleteBlogByQuery = async function (req, res) {
     ) {
       filterQuery["authorId"] = req["x-api-key"].authorId;
     } else {
-      return res
-        .status(401)
-        .send({
-          msg: `You are not authorized to delete blogs of this authorId=${authorId}`,
-        });
+      return res.status(401).send({
+        msg: `You are not authorized to delete blogs of this authorId=${authorId}`,
+      });
     }
     if (validator.isValid(category)) {
       filterQuery["category"] = category;
