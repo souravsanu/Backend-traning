@@ -178,9 +178,6 @@ const deleteBlogById = async function (req, res) {
 
     let Blog = await blogModel.findById(id);
 
-    if (!Blog) {
-      return res.status(404).send({ status: false, msg: "No such blog found" });
-    }
     if (Blog.isDeleted == false) {
       let Update = await blogModel.findOneAndUpdate(
         { _id: id },
