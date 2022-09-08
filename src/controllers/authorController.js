@@ -1,5 +1,7 @@
 const authorModel = require("../models/authorModel")
 const jwt = require("jsonwebtoken")
+let regexValidation = /^[a-zA-Z]+([\s][a-zA-Z]+)*$/;
+
 const createAuthor = async function (req, res) {
     try {
         let data = req.body
@@ -13,10 +15,10 @@ const createAuthor = async function (req, res) {
         if (!email) { return res.status(400).send({ status: false, msg: "email is required" }) }
         if (!password) { return res.status(400).send({ status: false, msg: "password is required" }) }
 
-        if (typeof fname !== "string" || fname[0] == " " || fname[fname.length - 1] == " ") {
+        if (typeof fname !== "string" || fname[0] == " " || fname[fname.length - 1] == " " || !fname.match(regexValidation)) {
             return res.status(400).send({ status: false, msg: "please enetr a valid firstname" })
         }
-        if (typeof lname !== "string" || lname[0] == " " || lname[lname.length - 1] == " ") {
+        if (typeof lname !== "string" || lname[0] == " " || lname[lname.length - 1] == " " || !fname.match(regexValidation)) {
             return res.status(400).send({ status: false, msg: "please enetr a valid lastname" })
         }
         if (title !== "Mr" && title !== "Mrs" && title !== "Miss") {

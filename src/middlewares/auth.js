@@ -7,9 +7,13 @@ const mid1 = async function (req, res, next) {
     try {
         let blogId = req.params.blogId;
         if (!blogId) return res.status(400).send({ status: false, msg: "BlogId is a Mandatory Field" });
+      
         let blog = await blogModel.find({ _id: blogId });
+
         if (blog.length < 1) return res.status(404).send({ status: false, msg: "No Blog Found,Please Confirm The BlogId" });
+      
         let blog1 = await blogModel.find({ _id: blogId, isDeleted: false });
+     
         if (blog1.length < 1) return res.status(404).send({ status: false, msg: "No Blog Found,Its been deleted" });
         req.blogId = blogId,
 
