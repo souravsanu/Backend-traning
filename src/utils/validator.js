@@ -4,7 +4,7 @@ const isValid = function (value) {
   if (
     typeof value === "string" &&
     value.length > 0 &&
-    /^[a-zA-Z0-9 ]*$/.test(value)
+    /^[a-zA-Z0-9 .,]*$/.test(value)
   )
     return true;
   return false;

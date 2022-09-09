@@ -35,25 +35,25 @@ const createBlog = async function (req, res) {
       });
     }
 
-    if (!validator.isValidObjectId(authorId)) {
-      return res.status(400).send({
-        status: false,
-        message: `${authorId} is not a valid author id,Author id is required`,
-      });
-    }
-    const findAuthor = await authorModel.findById(authorId);
-    if (!findAuthor) {
-      return res
-        .status(400)
-        .send({ status: false, message: `Author does not exists.` });
-    }
+    // if (!validator.isValidObjectId(authorId)) {
+    //   return res.status(400).send({
+    //     status: false,
+    //     message: `${authorId} is not a valid author id,Author id is required`,
+    //   });
+    // }
+    // const findAuthor = await authorModel.findById(authorId);
+    // if (!findAuthor) {
+    //   return res
+    //     .status(400)
+    //     .send({ status: false, message: `Author does not exists.` });
+    // }
     if (!validator.isValid(category)) {
       return res.status(400).send({
         status: false,
         message: "Blog category is required,only alphbets allowed.",
       });
     }
-    if (tags.length > 0) {
+    if (tags) {
       if (!validator.isStringsArray(tags)) {
         return res.status(400).send({
           status: false,
@@ -61,7 +61,7 @@ const createBlog = async function (req, res) {
         });
       }
     }
-    if (subcategory.length > 0) {
+    if (subcategory) {
       if (!validator.isStringsArray(subcategory)) {
         return res.status(400).send({
           status: false,
@@ -219,16 +219,17 @@ const deleteBlogByQuery = async function (req, res) {
     }
 
     const { authorId, category, tags, subcategory, isPublished } = queryParams;
-
-    if (
-      validator.isValidObjectId(authorId) &&
-      authorId === req["x-api-key"].authorId
-    ) {
-      filterQuery["authorId"] = req["x-api-key"].authorId;
-    } else {
-      return res.status(401).send({
-        msg: `You are not authorized to delete blogs of this authorId=${authorId}`,
-      });
+    if (authorId) {
+      if (
+        validator.isValidObjectId(authorId) &&
+        authorId === req["x-api-key"].authorId
+      ) {
+        filterQuery["authorId"] = req["x-api-key"].authorId;
+      } else {
+        return res.status(401).send({
+          msg: `You are not authorized to delete blogs of this authorId=${authorId}`,
+        });
+      }
     }
     if (validator.isValid(category)) {
       filterQuery["category"] = category;
