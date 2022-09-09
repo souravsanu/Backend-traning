@@ -17,9 +17,15 @@ const createBlog = async function (req, res) {
     //Extract params
     const { title, body, authorId, tags, category, subcategory, isPublished } =
       requestBody;
-
-    if (decodedToken.authorId !== authorId.toString())
-      return res.status(403).send({ msg: " Not authorised .." });
+    if (authorId) {
+      if (decodedToken.authorId !== authorId.toString())
+        return res.status(403).send({ msg: " Not authorised .." });
+    } else {
+      return res.status(400).send({
+        status: false,
+        message: "Blog authorid is required",
+      });
+    }
 
     // Validation starts
     if (!validator.isValid(title)) {
