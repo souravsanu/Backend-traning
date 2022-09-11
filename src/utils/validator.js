@@ -13,7 +13,7 @@ const isValid = function (value) {
   if (
     typeof value === "string" &&
     value.length > 0 &&
-    /^[A-Za-z]+[a-zA-Z0-9 .,]*$/.test(value)
+    /^[A-Za-z0-9]+[a-zA-Z0-9 .,]*$/.test(value)
   )
     return true;
   return false;
