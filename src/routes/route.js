@@ -24,14 +24,12 @@ router.post("/blogs", middleware.authenticate, blogcontroller.createBlog)
 router.get("/blogs", middleware.authenticate, blogcontroller.getBlogs)
 
 //update
-router.put("/blogs/:blogId", middleware.blogAuthorise, middleware.authenticate, middleware.authorise, blogcontroller.updateBlog)
+router.put("/blogs/:blogId",middleware.authenticate, middleware.Authorise, blogcontroller.updateBlog)
 
 //delete
-router.delete("/blogs/:blogId", middleware.blogAuthorise, middleware.authenticate, middleware.authorise, blogcontroller.deleteBlogsParam)
+router.delete("/blogs/:blogId",middleware.authenticate, middleware.Authorise, blogcontroller.deleteBlogsParam)
 
 //delete
-// router.delete("/blogs", middleware.authenticate, middleware.deleteAuthorised, blogcontroller.deleteBlogsQuery)
-
 router.delete("/blogs", middleware.authenticate, middleware.deleteAuthorised, blogcontroller.deleteBlogsQuery)
 
 

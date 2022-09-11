@@ -90,9 +90,22 @@ const updateBlog = async function (req, res) {
 
 const deleteBlogsParam = async (req, res) => {
     try {
+        let iDfromParams = req.params.blogId
+        if (!iDfromParams)
+            return res.status(400).send({ status: false, msg: "pleas enter  ID" })
+        if (iDfromParams.length > 24 || iDfromParams.length < 24)
+        return res.status(400).send({ status: false, msg: "Invalid ID" })
 
-        await blogModel.updateOne((req.valid), { $set: { isDeleted: true, deletedAt: today } })
-        return res.status(200).send()
+        let data03 = await blogModel.findById(iDfromParams)
+      
+        if (!data03)
+           return res.status(400).send({ status: false, msg: "Invalid ID" })
+        if (data03.isDeleted) {
+            return res.status(404).send({ status: false, msg: "blog document doesn't exist" })
+        }
+       
+         await blogModel.updateOne((data03), { $set: { isDeleted: true , deletedAt: today } })
+        return res.status(200).send({status:true})
     }
     catch (error) {
         res.status(500).send({ status: false, msg: error.message })

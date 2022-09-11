@@ -29,7 +29,7 @@ const createAuthor = async function (req, res) {
         if (findEmail) {
             return res.status(400).send({ status: false, msg: "email id already exsits" })
         }
-        fname.trim()
+      
 
         let authorCreated = await authorModel.create(data)
         res.status(201).send({ status: true, data: authorCreated })
