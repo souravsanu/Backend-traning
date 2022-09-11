@@ -44,7 +44,7 @@ const isValidObjectId = function (objectId) {
 
 const isStringsArray = function (arr) {
   for (let i = 0; i < arr.length; i++) {
-    if (typeof i !== "string" || i.length === 0) return false;
+    if (typeof arr[i] !== "string" || i.length === 0) return false;
   }
   return true;
 };
@@ -59,3 +59,4 @@ module.exports = {
   isStringsArray,
   isValidName,
 };
+// console.log(isStringsArray(["ddddd"]));
