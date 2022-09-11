@@ -103,7 +103,7 @@ const deleteBlogsParam = async (req, res) => {
 const deleteBlogsQuery = async function (req, res) {
     try {     
        let data = req.data
-       
+       console.log(data)
         if (data.isDeleted) {
             return res.status(404).send({ status: false, msg: "blog document doesn't exist" })
         }
@@ -117,5 +117,4 @@ const deleteBlogsQuery = async function (req, res) {
         res.status(500).send({ mas: error.message })
     }
 }
-
 module.exports = { getBlogs, createBlog, updateBlog, deleteBlogsParam, deleteBlogsQuery }

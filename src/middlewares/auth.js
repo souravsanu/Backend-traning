@@ -66,6 +66,7 @@ const authorise = async function (req, res, next) {
                 return res.status(401).send({ status: false, msg: "UnAuthorised" });
             next()
         };
+        next()
     }
     catch (error) {
         return res.status(500).send({ status: false, msg: error.message })
@@ -77,25 +78,30 @@ const deleteAuthorised = async function (req, res, next) {
     try {
         let token = req["x-api-key"];
         let data = req.query
+        console.log("category",data)
+
         if (Object.keys(data).length == 0)
             return res.status(400).send({ status: false, msg: "please enter data to update" })
 
         if (req.query.authorId) {
             if (req.query.authorId != token.authorid)
                 return res.status(401).send({ status: false, msg: "UnAuthorised" });
-            next()
         };
-        if (Object.keys(req.query).length > 0) {
-            const data = await blogModel.findOne(req.query)
+        if (Object.keys(data).length > 0) {
 
-            if (data.authorId != token.authorid) return res.status(403).send({ status: false, msg: "UnAuthorised" })
-            req.data = data
+            const data1 = await blogModel.findOne(data)
+            console.log("delete",data1)
+
+            if (data1.authorId != token.authorid) return res.status(403).send({ status: false, msg: "UnAuthorised" })
+            req.data = data1
             next()
-        };
 
-    } catch (error) {
-        return res.status(500).send({ status: false, msg: error.message })
+            };
 
+
+        } catch (error) {
+            return res.status(500).send({ status: false, msg: error.message })
+
+        }
     }
-}
 module.exports = { blogAuthorise, authenticate, authorise, deleteAuthorised }

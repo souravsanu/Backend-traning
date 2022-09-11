@@ -30,8 +30,9 @@ router.put("/blogs/:blogId", middleware.blogAuthorise, middleware.authenticate, 
 router.delete("/blogs/:blogId", middleware.blogAuthorise, middleware.authenticate, middleware.authorise, blogcontroller.deleteBlogsParam)
 
 //delete
-router.delete("/blogs", middleware.authenticate, middleware.deleteAuthorised, blogcontroller.deleteBlogsQuery)
+// router.delete("/blogs", middleware.authenticate, middleware.deleteAuthorised, blogcontroller.deleteBlogsQuery)
 
+router.delete("/blogs", middleware.authenticate, middleware.deleteAuthorised, blogcontroller.deleteBlogsQuery)
 
 
 

@@ -18,7 +18,7 @@ const createAuthor = async function (req, res) {
         if (typeof fname !== "string" || fname[0] == " " || fname[fname.length - 1] == " " || !fname.match(regexValidation)) {
             return res.status(400).send({ status: false, msg: "please enetr a valid firstname" })
         }
-        if (typeof lname !== "string" || lname[0] == " " || lname[lname.length - 1] == " " || !fname.match(regexValidation)) {
+        if (typeof lname !== "string" || lname[0] == " " || lname[lname.length - 1] == " " || !lname.match(regexValidation)) {
             return res.status(400).send({ status: false, msg: "please enetr a valid lastname" })
         }
         if (title !== "Mr" && title !== "Mrs" && title !== "Miss") {
