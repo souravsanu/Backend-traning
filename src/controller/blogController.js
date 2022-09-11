@@ -233,6 +233,8 @@ const deleteBlogByQuery = async function (req, res) {
           msg: `You are not authorized to delete blogs of this authorId=${authorId}`,
         });
       }
+    } else {
+      filterQuery["authorId"] = req["x-api-key"].authorId;
     }
     if (validator.isValid(category)) {
       filterQuery["category"] = category;
