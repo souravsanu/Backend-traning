@@ -13,11 +13,11 @@ const collageSchema = new mongoose.Schema({
      
 logoLink: {
     type:String,
-    requie:true
+    required:true
    },
 
-isDeleted: {type:boolean,default: false}
+isDeleted: {type:Boolean,default: false}
 
 },{ timestamps:true});
 
-module.exports = mongoose.model('collage',collageSchema)
+module.exports = mongoose.model('Collage',collageSchema)

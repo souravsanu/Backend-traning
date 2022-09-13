@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-Const ObjectId=mongoose.Schema.Types.ObjectId
+const ObjectId=mongoose.Schema.Types.ObjectId
 
 const internSchema=new mongoose.Schema({
 
@@ -19,13 +19,13 @@ mobile: {
 },
 collegeId: {
     type:ObjectId,
-    ref:"college"
+    ref:"Collage"
 },
 isDeleted: {
     type:boolean,
     default: false
 }
-},{timestand:true});
+},{timestamps:true});
 
 module.exports = mongoose.model('intern',internSchema)
 
