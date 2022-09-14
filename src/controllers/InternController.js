@@ -1,5 +1,5 @@
 const internModel = require('../models/internModel')
-const collegeModel = require('../models/collageModel')
+const collegeModel = require('../models/collegeModel')
 
 let regexValidation = /^[a-zA-Z]+([\s][a-zA-Z]+)*$/;
 let regexValidEmail = /[a-zA-Z0-9_\-\.]+[@][a-z]+[\.][a-z]{2,3}/;

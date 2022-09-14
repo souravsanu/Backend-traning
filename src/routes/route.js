@@ -11,4 +11,6 @@ router.post("/functionup/colleges", collagecontroller.createcollage)
 
 router.post("/functionup/interns", interncontroller.createintern)
 
+router.get("/functionup/collegeDetails" , collagecontroller.Getcollegedetail)
+
 module.exports = router;
