@@ -1,8 +1,7 @@
 const collegeModel = require('../models/collegeModel')
 const internModel = require('../models/internModel')
 let regexValidname = /^[a-zA-Z]+([\s][a-zA-Z]+)*$/;
-let regexValidfullNmae = /^[a-zA-Z]+([\s][a-zA-Z]+)*$/;
-let regexlogoLink = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+let regexlogoLink =/^https?:\/\/.*\/.*\.(png|gif|webp|jpeg|jpg)\??.*$/gmi
 // ==============================================createcollege==================================================
 const createcollage = async function (req, res) {
     try {
@@ -16,9 +15,9 @@ const createcollage = async function (req, res) {
         if (!logoLink) return res.status(400).send({ status: false, msg: "Enter collage logoLink" })
 
         if (!name.match(regexValidname)) return res.status(400).send({ status: false, msg: "please enetr a valid name" })
-        if (!fullName.match(regexValidfullNmae)) return res.status(400).send({ status: false, msg: "please enetr a valid fullName" })
+        if (!fullName.match(regexValidname)) return res.status(400).send({ status: false, msg: "please enetr a valid fullName" })
         if (!logoLink.match(regexlogoLink)) return res.status(400).send({ status: false, msg: "please enetr a valid logoLink" })
-
+        
         let findname = await collegeModel.findOne({ name: name })
         if (findname) return res.status(400).send({ status: false, msg: "name already exsits" })
 
@@ -41,14 +40,17 @@ const Getcollegedetail = async (req, res) => {
         let data = req.query.name
         if (!data) return res.status(400).send({ status: false, msg: "only name is allow" })
 
-        let collagedata = await collegeModel.findOne({ name: data })
+        let collagedata = await collegeModel.findOne({ name: data ,isDeleted:false})
         if (!collagedata) return res.status(404).send({ status: false, msg: "College is Not found!" })
-
+        let final = await collegeModel.findOne({ name: data ,isDeleted:false}).select({_id:0,createdAt:0,updatedAt:0,__v:0})
         let collageid = collagedata._id.toString()
-        let interns = await internModel.find({ collegeId: collageid })
+        let interns = await internModel.find({ collegeId: collageid ,isDeleted:false})
+        
         if (!interns) return res.status(404).send({ status: false, msg: "intern is Not found!" })
+        final=JSON.parse(JSON.stringify(final))
+        final.interns=interns
 
-        res.status(200).send({status : true ,Data : collagedata,interns})
+        res.status(200).send({status : true ,Data : final})
 
     } catch (error) {
         res.status(500).send({ status: false, msg: error.message })
