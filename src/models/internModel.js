@@ -22,7 +22,7 @@ collegeId: {
     ref:"Collage"
 },
 isDeleted: {
-    type:boolean,
+    type:Boolean,
     default: false
 }
 },{timestamps:true});

@@ -1,13 +1,13 @@
 {
   "name": "src",
   "version": "1.0.0",
-  "description": "Mini Blog Project.Group-11",
+  "description": "Intern Project.Group-12",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js"
   },
-  "author": "Pradeep Patil ,Deepanshu Yadav, Aaditya Patil",
+  "author": "Prakash kumar singh,Aaditya Patil,Pawar Mukesh,Saurabh Mondal",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
