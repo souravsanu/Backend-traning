@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
-const isValidRequestBody = function (requestBody) {
-  return Object.keys(requestBody).length > 0;
+const data = function (requestBody) {
+  return Object.keys(data).length > 0;
 };
 //clg Name Validation
 const isValidClgName = function (name) {
