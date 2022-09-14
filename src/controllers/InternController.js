@@ -5,6 +5,7 @@ let regexValidation = /^[a-zA-Z]+([\s][a-zA-Z]+)*$/;
 let regexValidEmail = /[a-zA-Z0-9_\-\.]+[@][a-z]+[\.][a-z]{2,3}/;
 let regexValidNumber = /^([+]\d{2})?\d{10}$/;
 
+// =====================================createintern================================================
 const createintern = async function (req, res) {
     try {
         let data = req.body
@@ -32,7 +33,6 @@ const createintern = async function (req, res) {
         let clgId = CheckCollege._id
         req.body.collegeId = clgId
      
-
         let intern = await internModel.create(data)
         res.status(201).send({ status: true, Data: intern })
 

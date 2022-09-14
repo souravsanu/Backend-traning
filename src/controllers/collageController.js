@@ -33,20 +33,22 @@ const createcollage = async function (req, res) {
 // ==============================================Getcollegedetail==================================================
 const Getcollegedetail = async (req, res) => {
     try {
-        let data = req.query.name
-        if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "plzz give some data" })
-        console.log(data)
-        
-        // if()
+        let data1 = req.query
 
-        let collagedata = await collegeModel.findOne({name:data})
+        if (Object.keys(data1).length == 0 || Object.keys(data1).length >= 2)
+            return res.status(400).send({ status: false, msg: "only name is allow" })
+
+        let data = req.query.name
+        if (!data) return res.status(400).send({ status: false, msg: "only name is allow" })
+
+        let collagedata = await collegeModel.findOne({ name: data })
         if (!collagedata) return res.status(404).send({ status: false, msg: "College is Not found!" })
 
         let collageid = collagedata._id.toString()
         let interns = await internModel.find({ collegeId: collageid })
         if (!interns) return res.status(404).send({ status: false, msg: "intern is Not found!" })
 
-        res.send({ data: collagedata, interns: interns })
+        res.status(200).send({status : true ,Data : collagedata,interns})
 
     } catch (error) {
         res.status(500).send({ status: false, msg: error.message })
