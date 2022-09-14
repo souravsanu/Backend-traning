@@ -13,13 +13,13 @@ const createcollage = async function (req, res) {
         if (!fullName) return res.status(400).send({ status: false, msg: "Enter collage FullName " })
         if (!logoLink) return res.status(400).send({ status: false, msg: "Enter collage logoLink" })
 
-        if (typeof name !== "string" || name[0] == " " || name[name.length - 1] == " " || !name.match(regexValidation)) {
+        if (!name.match(regexValidation)) {
             return res.status(400).send({ status: false, msg: "please enetr a valid name" })
         }
-        if (typeof fullName !== "string" || fullName[0] == " " || fullName[fullName.length - 1] == " " || !fullName.match(regexValidation)) {
+        if (!fullName.match(regexValidation)) {
             return res.status(400).send({ status: false, msg: "please enetr a valid fullName" })
         }
-        if (typeof logoLink !== "string" || logoLink[0] == " " || logoLink[logoLink.length - 1] == " " || !logoLink.match(regexlogoLink)) {
+        if (!logoLink.match(regexlogoLink)) {
             return res.status(400).send({ status: false, msg: "please enetr a valid logoLink" })
         }
 
