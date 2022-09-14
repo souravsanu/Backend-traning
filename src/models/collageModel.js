@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const collageSchema = new mongoose.Schema({
+const collegeSchema = new mongoose.Schema({
 
     name: { type:String,
     required:true,
@@ -20,4 +20,4 @@ isDeleted: {type:Boolean,default: false}
 
 },{ timestamps:true});
 
-module.exports = mongoose.model('Collage',collageSchema)
+module.exports = mongoose.model('Collage',collegeSchema)
