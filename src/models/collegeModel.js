@@ -1,24 +1,21 @@
-const mongoose = require('mongoose')
-const collegeSchema = new mongoose.Schema({
+const mongoose = require("mongoose");
+const collegeSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, unique: true, lowercase: true },
 
-    name: { type:String,
-    required:true,
-     unique:true,
-     lowercase:true
- },
- 
- fullName: {
-    type:String,
-    required:true,
+    fullName: {
+      type: String,
+      required: true,
     },
-     
-logoLink: {
-    type:String,
-    required:true
-   },
 
-isDeleted: {type:Boolean,default: false}
+    logoLink: {
+      type: String,
+      required: true,
+    },
 
-},{ timestamps:true});
+    isDeleted: { type: Boolean, default: false },
+  },
+  { versionKey: false }
+);
 
-module.exports = mongoose.model('Collage',collegeSchema)
+module.exports = mongoose.model("Collage", collegeSchema);
