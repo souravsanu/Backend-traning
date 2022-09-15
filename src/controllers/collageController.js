@@ -37,10 +37,10 @@ const Getcollegedetail = async (req, res) => {
         let data1 = req.query
 
         if (Object.keys(data1).length == 0 || Object.keys(data1).length >= 2)
-            return res.status(400).send({ status: false, msg: "only name is allow" })
+            return res.status(400).send({ status: false, msg: "only collegename is allow" })
 
-        let data = req.query.name
-        if (!data) return res.status(400).send({ status: false, msg: "only name is allow" })
+        let data = req.query.collegeName
+        if (!data) return res.status(400).send({ status: false, msg: "only collegename is allow" })
 
         let collagedata = await collegeModel.findOne({ name: data ,isDeleted:false})
         if (!collagedata) return res.status(404).send({ status: false, msg: "College is Not found!" })
