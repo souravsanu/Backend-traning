@@ -10,7 +10,7 @@ const createcollege = async function (req, res) {
         let data = req.body
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "plzz give some data" })
 
-        const { name, fullName, logoLink } = data
+        const { name, fullName, logoLink } findname= data
 
         if (!name) return res.status(400).send({ status: false, msg: "Enter collage name" })
         if (!fullName) return res.status(400).send({ status: false, msg: "Enter collage FullName " })
@@ -21,7 +21,7 @@ const createcollege = async function (req, res) {
         if (!logoLink.match(regexlogoLink)) return res.status(400).send({ status: false, msg: "please enetr a valid logoLink" })
         
         let findname = await collegeModel.findOne({ name: name })
-        if (findname) return res.status(400).send({ status: false, msg: "name already exsits" })
+        if (findname) return res.status(403).send({ status: false, msg: "name already exsits" })
 
         let collage = await collegeModel.create(data)
         res.status(201).send({ status: true, Data: collage })
