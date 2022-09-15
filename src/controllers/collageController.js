@@ -40,17 +40,17 @@ const Getcollegedetail = async (req, res) => {
             return res.status(400).send({ status: false, msg: "only collegename is allow" })
 
         let data = req.query.collegeName
-        if (!data) return res.status(400).send({ status: false, msg: "only collegename is allow" })
+        if (!data) return res.status(400).send({ status: false, msg: "Enter collegename" })
 
         let collagedata = await collegeModel.findOne({ name: data ,isDeleted:false})
         if (!collagedata) return res.status(404).send({ status: false, msg: "College is Not found!" })
-       
-        let final = await collegeModel.findOne({ name: data ,isDeleted:false}).select({_id:0,createdAt:0,updatedAt:0,__v:0})
-       
+              
         let collageid = collagedata._id.toString()
         let interns = await internModel.find({ collegeId: collageid ,isDeleted:false}).select({_id:0,createdAt:0,updatedAt:0,__v:0})
-        
         if (!interns) return res.status(404).send({ status: false, msg: "intern is Not found!" })
+        
+        let final = await collegeModel.findOne({ name: data ,isDeleted:false}).select({_id:0,createdAt:0,updatedAt:0,__v:0})
+
         final=JSON.parse(JSON.stringify(final))
         final.interns=interns
 

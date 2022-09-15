@@ -23,10 +23,10 @@ const createintern = async  (req, res)=> {
         if (!mobile.match(regexValidNumber)) return res.status(400).send({ status: false, msg: "please enetr a valid mobile" })
 
         let findEmail = await internModel.findOne({ email: email, isDeleted: false })
-        if (findEmail) return res.status(409).send({ status: false, msg: "email id already exists" })
+        if (findEmail) return res.status(403).send({ status: false, msg: "email id already exists" })
 
         let findmobile = await internModel.findOne({ mobile: mobile, isDeleted: false })
-        if (findmobile) return res.status(409).send({ status: false, msg: "Mobile number already exsits" })
+        if (findmobile) return res.status(403).send({ status: false, msg: "Mobile number already exsits" })
 
         let CheckCollege = await collegeModel.findOne({ name: collegeName, isDeleted: false })
         if (!CheckCollege) return res.status(404).send({ status: false, message: ` No such college Name Not Found!` });
