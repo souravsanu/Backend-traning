@@ -10,7 +10,7 @@ const createcollege = async function (req, res) {
         let data = req.body
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "plzz give some data" })
 
-        const { name, fullName, logoLink } findname= data
+        const { name, fullName, logoLink } = data
 
         if (!name) return res.status(400).send({ status: false, msg: "Enter collage name" })
         if (!fullName) return res.status(400).send({ status: false, msg: "Enter collage FullName " })
