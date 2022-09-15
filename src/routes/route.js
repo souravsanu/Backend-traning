@@ -7,7 +7,7 @@ router.get("/test-me", function (req, res) {
     res.send("My first ever api!")
 })
 // ===========================================================
-router.post("/functionup/colleges", collagecontroller.createcollage)
+router.post("/functionup/colleges", collagecontroller.createcollege)
 
 router.post("/functionup/interns", interncontroller.createintern)
 

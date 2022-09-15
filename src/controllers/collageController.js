@@ -1,9 +1,11 @@
 const collegeModel = require('../models/collegeModel')
 const internModel = require('../models/internModel')
+
 let regexValidname = /^[a-zA-Z]+([\s][a-zA-Z]+)*$/;
+let regexvalidfullName =/^[a-zA-Z]+([\s][a-zA-Z,]+)*$/;
 let regexlogoLink =/^https?:\/\/.*\/.*\.(png|gif|webp|jpeg|jpg)\??.*$/gmi
 // ==============================================createcollege==================================================
-const createcollage = async function (req, res) {
+const createcollege = async function (req, res) {
     try {
         let data = req.body
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "plzz give some data" })
@@ -15,7 +17,7 @@ const createcollage = async function (req, res) {
         if (!logoLink) return res.status(400).send({ status: false, msg: "Enter collage logoLink" })
 
         if (!name.match(regexValidname)) return res.status(400).send({ status: false, msg: "please enetr a valid name" })
-        if (!fullName.match(regexValidname)) return res.status(400).send({ status: false, msg: "please enetr a valid fullName" })
+        if (!fullName.match(regexvalidfullName)) return res.status(400).send({ status: false, msg: "please enetr a valid fullName" })
         if (!logoLink.match(regexlogoLink)) return res.status(400).send({ status: false, msg: "please enetr a valid logoLink" })
         
         let findname = await collegeModel.findOne({ name: name })
@@ -42,9 +44,11 @@ const Getcollegedetail = async (req, res) => {
 
         let collagedata = await collegeModel.findOne({ name: data ,isDeleted:false})
         if (!collagedata) return res.status(404).send({ status: false, msg: "College is Not found!" })
+       
         let final = await collegeModel.findOne({ name: data ,isDeleted:false}).select({_id:0,createdAt:0,updatedAt:0,__v:0})
+       
         let collageid = collagedata._id.toString()
-        let interns = await internModel.find({ collegeId: collageid ,isDeleted:false})
+        let interns = await internModel.find({ collegeId: collageid ,isDeleted:false}).select({_id:0,createdAt:0,updatedAt:0,__v:0})
         
         if (!interns) return res.status(404).send({ status: false, msg: "intern is Not found!" })
         final=JSON.parse(JSON.stringify(final))
@@ -57,4 +61,4 @@ const Getcollegedetail = async (req, res) => {
     }
 }
 
-module.exports = { createcollage, Getcollegedetail }
+module.exports = { createcollege, Getcollegedetail }
