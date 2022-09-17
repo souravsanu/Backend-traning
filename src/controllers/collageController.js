@@ -3,7 +3,7 @@ const internModel = require("../models/internModel");
 
 let regexValidname = /^[a-zA-Z]+([\s][a-zA-Z]+)*$/;
 let regexvalidfullName = /^[a-zA-Z]+([\s][a-zA-Z,]+)*$/;
-let regexlogoLink = /^https?:\/\/.*\/.*\.(png|gif|webp|jpeg|jpg)\??.*$/gim;
+let regexlogoLink = /^https?:\/\/.*\.[s3].*\.(png|gif|webp|jpeg|jpg)\??.*$/gim;
 // ==============================================createcollege==================================================
 const createcollege = async function (req, res) {
   try {
