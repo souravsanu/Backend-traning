@@ -152,7 +152,7 @@ const userLogin = async function (req, res) {
         if (!isValidPass(password))
             return res.
                 status(400).
-                send({ status: false, msg: "Only digit is Allowed with lenght 8-15 only" })
+                send({ status: false, msg: "password is Allowed with lenght 8-15 only" })
         const result = await userModel.findOne({ email: email, password: password })
         if (!result)
             return res.
