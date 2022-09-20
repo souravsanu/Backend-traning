@@ -1,6 +1,6 @@
 const express=require("express");
 const mongoose=require("mongoose");
-// const router=express.Router();
+
 const bodyParser = require('body-parser');
 const route=require("./route/routes")
 const app=express();
@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-mongoose.connect("mongodb+srv://miniblogeproject:akash1234atlas@cluster0.lz7q3.mongodb.net/booksManagementGroup10",{
+mongoose.connect("mongodb+srv://book_management:book1234@cluster0.3qd4bit.mongodb.net/booksManagementGroup10",{
     useNewUrlParser: true
 })
 .then( () => console.log("MongoDb is connected"))
