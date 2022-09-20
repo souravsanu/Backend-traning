@@ -2,18 +2,23 @@ const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken")
 const userModel = require("../models/userModel");
 const bookModel = require("../models/booksModel")
-const { isNotEmpty, isValidName, isValidPhone, isValidEmail, isValidPass } = require("../validators/validators")
+const { isNotEmpty, isValidName, isValidPhone, isValid, isValidEmail, isValidPass,isstreatValid,isValidPin } = require("../validators/validators")
 
 const createUser = async function (req, res) {
     try {
         const data = req.body;
-        const { title, name, phone, email, password } = data;
+        
         if (!Object.keys(data).length)
             return res.
                 status(400).
                 send({ status: false, message: "Please provide some data into the request body!!" });
-
-        // Title validation
+        if(Object.keys(data).length>6)
+            return res.
+                status(400).
+                    send({status:false,msg:"invalid data entry inside request body"})
+                    
+        const { title, name, phone, email, password,address } = data;
+//*********************************** Title validation *******************************************
         if (!title) 
             return res.
                 status(400).
@@ -28,8 +33,7 @@ const createUser = async function (req, res) {
             return res.
                 status(400).
                     send({ status: false, msg: "use only Mr, Mrs, Miss" })
-
-        // name validation
+//****************************** name validation ****************************************
         if (!name)
             return res.
                 status(400).
@@ -43,16 +47,15 @@ const createUser = async function (req, res) {
             return res.
                 status(400).
                     send({ status: false, msg: "name is not valid" })
-        
-        // phone validation
+//*************************************** phone validation ***********************************************
         if (!phone) 
             return res.
                 status(400).
                     send({ status: false, msg: "phone is requried" });
         if (!isNotEmpty(phone)) 
-            return res.
-                status(400).
-                    send({ status: false, msg: "phone field is empty" });
+             return res.
+                 status(400).
+                     send({ status: false, msg: "phone field is empty" });
         data.phone = data.phone.trim()
         if (!isValidPhone(data.phone)) 
             return res.
@@ -64,7 +67,7 @@ const createUser = async function (req, res) {
                 status(400).
                     send({ status: false, message: "phone is already present" });
     
-        //Email validation
+//**************************Email validation*************************************************
         if (!email) 
             return res.
                 status(400).
@@ -85,7 +88,7 @@ const createUser = async function (req, res) {
                 status(400).
                     send({ status: false, message: "Email is already present" });
         
-        //password validation
+//*********************************** Password Validation *******************************
         if (!password) 
             return res.
                 status(400).
@@ -101,11 +104,59 @@ const createUser = async function (req, res) {
             return res.
                 status(400).
                     send({ status: false, msg: "Please enter a valid password" })
-
+        if(address){
+            if(Object.keys(address).length==0)
+                return res.
+                    status(400).
+                        send({status:false,msg:"Address must contain something"})
+            else{
+                const {street,city,pincode}=address
+            if(!(isValid(street) || isValid(city) || isValid(pincode))){
+                return res.
+                    status(400).
+                        send({status:false,msg:"We are looking for street ,city or pincode value only inside Address Object"})
+            }
+            else{
+                if(street){
+                    if (!isValid(street)) 
+                        return res.
+                            status(400).
+                                send({ status: false, msg: "street field is empty" });
+                    if(!isstreatValid(street))
+                        return res.
+                            status(400).
+                                send({status:false,msg:"street is invalid"})
+                data.address.street=street.trim()
+                }if(city){
+                    if (!isNotEmpty(city)) 
+                        return res.
+                            status(400).
+                                send({ status: false, msg: "city field is empty" });
+                    if(!isValidName(city))
+                        return res.
+                            status(400).
+                                send({status:false,msg:"city name is not valid"})
+                data.address.city=city.trim()
+                }if(pincode){
+                    if (!isNotEmpty(pincode)) 
+                        return res.
+                            status(400).
+                                send({ status: false, msg: "pincode field is empty" });
+                    if(!isValidPin(pincode))
+                        return res.
+                            status(400).
+                                send({status:false,msg:"pincode must contain only digit with 6 length"})
+                data.address.pincode=pincode.trim()
+                }
+            }
+            
+            }
+                
+        }
         let createData = await userModel.create(data);
         res.
             status(201).
-                send({ status: true, data: createData });
+                send({ status: true,msg:"User Registered Successfully", data: createData });
     } catch (error) {
         res.
             status(500).
@@ -173,23 +224,4 @@ const userLogin = async function (req, res) {
 
 
 module.exports = { createUser, userLogin };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
