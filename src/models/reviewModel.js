@@ -8,7 +8,7 @@
 }
 
 const mongoose = require("mongoose");
-const objectId = mongoose.Schema.Types.ObjectId;
+const ObjectId = mongoose.Schema.Types.ObjectId;
 const userSchema = new mongoose.Schema({
      bookId: {
         type: ObjectId,
@@ -24,13 +24,13 @@ const userSchema = new mongoose.Schema({
     },
     reviewedAt: {
         type: Date,
-        required: 'This field is Required'
+        required: true
     },
     rating: {
         type: Number,
         minlength: 1,
         maxlength: 5,
-        required: 'Rating is Required'
+        required: true
     },
     review: {
         type: String,
