@@ -29,7 +29,7 @@ const authentication = function (req, res, next) {
 
 //===================================== Authorization ==========================================
 
-const authoization = async function (req, res, next) {
+const authorization = async function (req, res, next) {
     try {
         let token = req.header('x-api-key')
         let bookId = req.params.bookId
@@ -70,5 +70,4 @@ const authoization = async function (req, res, next) {
 }
 
 
-module.exports.authentication = authentication
-module.exports.authoization = authoization
+module.exports = {authentication,authorization}

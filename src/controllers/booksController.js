@@ -149,6 +149,7 @@ const createBook = async function (req, res) {
     }
 }
 
+
 const getBooksByQuery=async function(req,res){
     try {
     
@@ -179,13 +180,14 @@ const getBooksByQuery=async function(req,res){
         books.sort((a, b) => a.title.localeCompare(b.title))
         return res.status(200).send({ status: true, message: "Books list", data: books })
     
-    } catch (error) {
+    } 
+    catch (error) {
         res.
             status(500).
             send({ status: false, msg: error.message })
-    }
-    }
+    } }
+
     
 
 
-module.exports={createBook,getBooksByQuery}
+module.exports={createBook,getBooksByQuery};

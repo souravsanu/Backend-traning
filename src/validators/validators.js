@@ -9,17 +9,17 @@ const isValid = function (value) {
     if (typeof value === "string" && value.trim().length > 0) return true;
     return false;
 }
-let isstreatValid = function (value) {
-    return (/^[\s]*[a-zA-Z]+([\s]?[a-zA-Z]+)*[\s]*$/.test(value))
+const isstreatValid = function (value) {
+    return (/^[\s]*[a-zA-Z-0-9,]+([\s]?[a-zA-Z-0-9]+)*[\s]*$/.test(value))
 }
 const isValidName = function (value) {
     if (value.match(/^[a-zA-Z\. ]*$/)) return true;  
     return false;
 }
-let isValidPhone = function (mob) {
-    return /^[\s]*[6-9]\d{9}[\s]*$/gi.test(mob)
+const isValidPhone = function (value) {
+    return /^[\s]*[6-9]\d{9}[\s]*$/gi.test(value)
 }
- let isValidISBN=function(value){
+const isValidISBN=function(value){
         return  /^[6-9]{3}[\-][\d]{10}$/.test(value)
  }
 
@@ -49,9 +49,13 @@ const isString=function(value){
     return false
 }
 
+const isValidRating=function(value){
+    
+    return (/^[1-5]{1}.\d{1}$/).test(value)
+}
 
 
-module.exports={isString,date,isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
+module.exports={isValidRating,isString,date,isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
 
 
 
