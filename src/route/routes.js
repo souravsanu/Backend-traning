@@ -8,5 +8,5 @@ const router=express.Router();
 
 router.post("/register",userController.createUser);
 router.post("/login",userController.userLogin)
-router.post("/books",bookController.createBook)
+router.post("/books",m.authentication,m.authoization,bookController.createBook)
 module.exports=router;

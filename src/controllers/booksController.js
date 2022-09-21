@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken")
 const userModel = require("../models/userModel");
 const bookModel = require("../models/booksModel")
-const { isNotEmpty, isValidName, isValidPhone, isValid, isValidEmail, isValidPass, isstreatValid, isValidPin, isValidISBN } = require("../validators/validators")
+const {date, isNotEmpty, isValidName, isValidPhone, isValid, isValidEmail, isValidPass, isstreatValid, isValidPin, isValidISBN } = require("../validators/validators")
 
 
 
@@ -27,6 +27,10 @@ const createBook = async function (req, res) {
             return res.
                 status(400).
                 send({ status: false, msg: "title is required" })
+        if(!isNotEmpty(title))
+            return res.
+                status(400).
+                    send({status:false,msg:"title is empty"})
         //*************************** title Validation *********************************
         if (!isValidName(title))
             return res.
@@ -35,7 +39,11 @@ const createBook = async function (req, res) {
         if (!excerpt)
             return res.
                 status(400).
-                send({ status: false, msg: "excert is required" })
+                send({ status: false, msg: "exceprt is required" })
+        if(!isNotEmpty(excerpt))
+            return res.
+                status(400).
+                    send({status:false,msg:"excerpt is empty"})
         //************************************ excert Validation ***************************/
         if (!isValidName(excerpt))
             return res.
@@ -105,8 +113,8 @@ const createBook = async function (req, res) {
                 status(400).
                 send({ status: false, msg: "Released At is required" })
         //*************************** releasedAt Validation  ********************************/
-        if (!Date.parse(releasedAt))
-            return res.send({ status: false, msg: "invalid value inside releasedAt" })
+        if (!date(releasedAt))
+            return res.send({ status: false, msg: "It must be present in YYYY-MM-DD formate" })
         //********************************** Title match checking ***************************/
         let titledata = await bookModel.findOne({ title: title })
         if (titledata)

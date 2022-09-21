@@ -39,8 +39,12 @@ const isValidPin=function(value){
     return true
     return false
 }
+function date(value){
+    return  /^\d{4}\-\d{1,2}\-\d{1,2}$/.test(value);
+}
 
-module.exports={isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
+
+module.exports={date,isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
 
 
 
