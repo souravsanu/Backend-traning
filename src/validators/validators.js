@@ -43,8 +43,15 @@ function date(value){
     return  /^\d{4}\-\d{1,2}\-\d{1,2}$/.test(value);
 }
 
+const isString=function(value){
+    if(value.match(/^[a-zA-Z_]*$/))
+    return true
+    return false
+}
 
-module.exports={date,isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
+
+
+module.exports={isString,date,isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
 
 
 

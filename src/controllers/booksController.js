@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken")
 const userModel = require("../models/userModel");
 const bookModel = require("../models/booksModel")
-const {date, isNotEmpty, isValidName, isValidPhone, isValid, isValidEmail, isValidPass, isstreatValid, isValidPin, isValidISBN } = require("../validators/validators")
+const {isString,date, isNotEmpty, isValidName, isValidPhone, isValid, isValidEmail, isValidPass, isstreatValid, isValidPin, isValidISBN } = require("../validators/validators")
 
 
 
@@ -132,8 +132,8 @@ const createBook = async function (req, res) {
             excerpt: excerpt.trim(),
             userId: userId.trim(),
             ISBN: ISBN.trim(),
-            category: category.trim(),
-            subcategory: subcategory.trim(),
+            category: category.trim().toLowerCase(),
+            subcategory: subcategory.trim().toLowerCase(),
             reviews: reviews,
             isDeleted: isDeleted,
             releasedAt: releasedAt
@@ -149,5 +149,43 @@ const createBook = async function (req, res) {
     }
 }
 
+const getBooksByQuery=async function(req,res){
+    try {
+    
+        const queryParams = req.query;
+        
+       
+        const{userId,category,subcategory}=queryParams;
+        if(Object.keys(queryParams).length>3)
+        return res.send({msg:"you have enter so many  query params"})
+       
+        if (Object.keys(queryParams).some(a => a == "userId")) {
+            if (!userId) return res.status(400).send({status:false,msg:"provide userId"})
+            if (!mongoose.Types.ObjectId.isValid(userId)) return res.status(400).send({ status:false,msg: "userId is not valid" });
+        }
+    
+        if (Object.keys(queryParams).some(a => a == "category")) {
+            if (!category) return res.status(400).send({status:false,msg:"provide category"})
+            if (!isString(category)) return res.status(400).send({ status:false,msg: "please provide catecory in string format " });
+            queryParams.category=category.toLowerCase();
+        }
+        if (Object.keys(queryParams).some(a => a == "subcategory")) {
+            if (!subcategory) return res.status(400).send({status:false,msg:"provide subcategory"})
+            if (!isString(subcategory)) return res.status(400).send({ status:false,msg: "please provide subcatecory in string format " });
+           
+        }
+    
+        const books = await bookModel.find({isDeleted:false,...queryParams}).select({ title: 1, _id: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
+        books.sort((a, b) => a.title.localeCompare(b.title))
+        return res.status(200).send({ status: true, message: "Books list", data: books })
+    
+    } catch (error) {
+        res.
+            status(500).
+            send({ status: false, msg: error.message })
+    }
+    }
+    
 
-module.exports={createBook}
+
+module.exports={createBook,getBooksByQuery}

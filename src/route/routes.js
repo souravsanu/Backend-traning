@@ -9,4 +9,5 @@ const router=express.Router();
 router.post("/register",userController.createUser);
 router.post("/login",userController.userLogin)
 router.post("/books",m.authentication,m.authoization,bookController.createBook)
+router.get("/books",bookController.getBooksByQuery)
 module.exports=router;
