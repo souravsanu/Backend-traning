@@ -19,6 +19,10 @@ const createBook = async function (req, res) {
                 status(400).
                 send({ status: false, msg: "Invalid entry in Request Query" })
         const { title, excerpt, userId, ISBN, category, subcategory, reviews, isDeleted, releasedAt } = requestbody
+        if(Object.keys(requestbody).length>9)
+            return res.
+                status(400).
+                    send({status:false,msg:"Invalid data in request body"})
         if (!title)
             return res.
                 status(400).

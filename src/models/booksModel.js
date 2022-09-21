@@ -44,7 +44,10 @@ const bookSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    deletedAt: Date,
+    deletedAt:{
+      type:Date,
+      default:null
+    },
     releasedAt: {
       type: Date,
       required: true,
