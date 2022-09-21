@@ -9,7 +9,7 @@ const { isNotEmpty, isValidName, isValidPhone, isValid, isValidEmail, isValidPas
 const createBook = async function (req, res) {
     try {
         let requestbody = req.body
-        let requestQuery = req.que
+        let requestQuery = req.query
         if (Object.keys(requestbody).length == 0)
             return res.
                 status(400).
@@ -46,7 +46,7 @@ const createBook = async function (req, res) {
                 status(400).
                 send({ status: false, msg: "userId is required" })
         //************************************ UserId Validation  ****************************/
-        if (!mongoose.Schema.Types.isValid(userId))
+        if (!mongoose.isValidObjectId(userId))
             return res.
                 status(400).
                 send({ status: false, msg: "userId is Invalid" })
@@ -60,21 +60,29 @@ const createBook = async function (req, res) {
                 status(400).
                 send({ status: false, msg: "ISBN is required" })
         //*********************************** ISBN Validation  ***************************************/
-        if (!isValidISBN())
+        if (!isValidISBN(ISBN))
             return res.send({ status: false, msg: "invalid ISBN , Plz check  the formate of Input" })
         if (!category)
             return res.
                 status(400).
                 send({ status: false, msg: "category is required" })
         //****************************************** Category Validation  *****************************/
-        if (!isValidName(category))
+        if (!isNotEmpty(category))
             return res.
                 status(400).
-                send({ status: false, msg: "invalid category" })
+                send({ status: false, msg: "empty category" })
+        if(!isValidName(category))
+            return res.
+                status(400).
+                    send({status:false,msg:"invalid category"})
         if (!subcategory)
             return res.
                 status(400).
                 send({ status: false, msg: "subcategory is required" })
+        if(!isNotEmpty(subcategory))
+            return res.
+                status(400).
+                    send({status:false,msg:"invalid subcategory"})
         //************************************ Subcategory Validation ***************************************/
         if (!isValidName(subcategory))
             return res.
@@ -118,9 +126,9 @@ const createBook = async function (req, res) {
             ISBN: ISBN.trim(),
             category: category.trim(),
             subcategory: subcategory.trim(),
-            reviews: reviews.trim(),
-            isDeleted: isDeleted.trim(),
-            releasedAt: releasedAt.trim()
+            reviews: reviews,
+            isDeleted: isDeleted,
+            releasedAt: releasedAt
         }
         let result = await bookModel.create(book)
         res.
@@ -132,3 +140,6 @@ const createBook = async function (req, res) {
             send({ status: false, msg: error.message })
     }
 }
+
+
+module.exports={createBook}
