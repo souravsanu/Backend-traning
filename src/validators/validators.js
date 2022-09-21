@@ -39,15 +39,11 @@ const isValidPin=function(value){
     return true
     return false
 }
-function date(value){
+function isValidDate(value){
     return  /^\d{4}\-\d{1,2}\-\d{1,2}$/.test(value);
 }
 
-const isString=function(value){
-    if(value.match(/^[a-zA-Z_]*$/))
-    return true
-    return false
-}
+
 
 const isValidRating=function(value){
     
@@ -55,7 +51,7 @@ const isValidRating=function(value){
 }
 
 
-module.exports={isValidRating,isString,date,isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
+module.exports={isValidRating,isValidDate,isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
 
 
 

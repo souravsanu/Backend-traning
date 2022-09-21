@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken")
 const userModel = require("../models/userModel");
 const bookModel = require("../models/booksModel")
-const {isString,date, isNotEmpty, isValidName, isValidPhone, isValid, isValidEmail, isValidPass, isstreatValid, isValidPin, isValidISBN } = require("../validators/validators")
+const {isValidDate, isNotEmpty, isValidName,  isValidISBN } = require("../validators/validators")
 
 
 
@@ -113,7 +113,7 @@ const createBook = async function (req, res) {
                 status(400).
                 send({ status: false, msg: "Released At is required" })
         //*************************** releasedAt Validation  ********************************/
-        if (!date(releasedAt))
+        if (!isValidDate(releasedAt))
             return res.send({ status: false, msg: "It must be present in YYYY-MM-DD formate" })
         //********************************** Title match checking ***************************/
         let titledata = await bookModel.findOne({ title: title })
@@ -167,12 +167,12 @@ const getBooksByQuery=async function(req,res){
     
         if (Object.keys(queryParams).some(a => a == "category")) {
             if (!category) return res.status(400).send({status:false,msg:"provide category"})
-            if (!isString(category)) return res.status(400).send({ status:false,msg: "please provide catecory in string format " });
+            if (!isValidName(category)) return res.status(400).send({ status:false,msg: "please provide catecory in string format " });
             queryParams.category=category.toLowerCase();
         }
         if (Object.keys(queryParams).some(a => a == "subcategory")) {
             if (!subcategory) return res.status(400).send({status:false,msg:"provide subcategory"})
-            if (!isString(subcategory)) return res.status(400).send({ status:false,msg: "please provide subcatecory in string format " });
+            if (!isValidName(subcategory)) return res.status(400).send({ status:false,msg: "please provide subcatecory in string format " });
            
         }
     

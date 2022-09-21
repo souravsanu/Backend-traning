@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken")
 const userModel = require("../models/userModel");
 const bookModel = require("../models/booksModel")
-const { isValidRating, date, isNotEmpty, isValidName, isValidPhone, isValid, isValidEmail, isValidPass, isstreatValid, isValidPin, isValidISBN } = require("../validators/validators")
+const { isValidRating, date, isNotEmpty, isValidName } = require("../validators/validators")
 const reviewModel = require("../models/reviewModel")
 
 const createReview = async function (req, res) {
