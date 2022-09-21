@@ -104,6 +104,8 @@ const createUser = async function (req, res) {
             return res.
                 status(400).
                     send({ status: false, msg: "Please enter a valid password" })
+
+                    
         if(address){
             if(Object.keys(address).length==0)
                 return res.
