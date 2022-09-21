@@ -19,6 +19,10 @@ const isValidName = function (value) {
 let isValidPhone = function (mob) {
     return /^[\s]*[6-9]\d{9}[\s]*$/gi.test(mob)
 }
+ let isValidISBN=function(value){
+        return /^[6-9]{3}\-([\d]{10})$/.test(value)
+    }
+
 const isValidEmail=function(value){
     if(value.match(/^[a-z0-9_]{3,}@[a-z]{3,}[.]{1}[a-z]{3,6}$/))
     return true;
@@ -36,7 +40,7 @@ const isValidPin=function(value){
     return false
 }
 
-module.exports={isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid}
+module.exports={isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
 
 
 

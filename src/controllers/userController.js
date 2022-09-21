@@ -162,7 +162,7 @@ const createUser = async function (req, res) {
     } catch (error) {
         res.
             status(500).
-            send({ status: false, msg: error.message });
+                send({ status: false, msg: error.message });
     }
 }
 
@@ -174,53 +174,56 @@ const userLogin = async function (req, res) {
         if (Object.keys(querybody).length > 0)
             return res.
                 status(400).
-                send({ status: false, msg: "Invalid request in queryParams" })
+                    send({ status: false, msg: "Invalid request in queryParams" })
 
         if (Object.keys(requestbody).length == 0)
             return res.
                 status(400).
-                send({ status: false, msg: "Data is required in request body" })
+                    send({ status: false, msg: "Data is required in request body" })
 
         if (Object.keys(requestbody).length > 2)
             return res.
                 status(400).
-                send({ status: false, msg: "Invalid request in request body" })
+                    send({ status: false, msg: "Invalid request in request body" })
 
         const { email, password } = requestbody
         if (!email)
             return res.
                 status(400).
-                send({ status: false, msg: "Email is required" })
+                    send({ status: false, msg: "Email is required" })
 
         if (!isValidEmail(email))
             return res.
                 status(400).
-                send({ status: false, msg: "Email is invalid" })
+                    send({ status: false, msg: "Email is invalid" })
 
         if (!password)
             return res.
                 status(400).
-                send({ status: false, msg: "password is required" })
+                    send({ status: false, msg: "password is required" })
 
         if (!isValidPass(password))
             return res.
                 status(400).
-                send({ status: false, msg: "password is Allowed with lenght 8-15 only" })
+                    send({ status: false, msg: "password is Allowed with lenght 8-15 only" })
         const result = await userModel.findOne({ email: email, password: password })
         if (!result)
             return res.
                 status(404).
-                send({ status: false, msg: "User is not Exist" })
+                    send({ status: false, msg: "User is not Exist" })
+
+// ************************* Token Creation *****************************************************
+        
         const token = jwt.sign({ userId: result._id.toString() },
-            "booksManagement17", { expiresIn: '24h' })
+            "booksManagement17", { expiresIn: '5000s' })
         res.header("x-auth-token", token)
         res.
             status(200).
-            send({ status: true, message: "Token has created", token: token })
+                send({ status: true, message: "Token has created", token: token })
     } catch (error) {
         res.
             status(500).
-            send({ status: false, msg: error.message })
+                send({ status: false, msg: error.message })
     }
 }
 
