@@ -6,12 +6,13 @@ const mongoose = require('mongoose')
 
 const authentication = function (req, res, next) {
     try {
-        const token = req.header('x-api-key')
+        const token = req.header['x-api-key']
         if (!token) {
             return res.status(401).send({ status: false, message: "Authentication token is required in header" })
         }
 
-        jwt.verify(token, "booksManagement17", function (err, decoded) {
+        jwt.verify(token, "booksManagement10", function (err, decoded) {
+            if(err && err.message=="jwt expired")return res.send({status:false,msg:"token is expired,please login again"})
             if (err) {
                 return res.status(403).send({ status: false, message: "Invalid authentication token in header" })
             }
@@ -49,7 +50,7 @@ const authorization = async function (req, res, next) {
             }
         }
 
-        let decodedToken = jwt.verify(token, "booksManagement17")
+        let decodedToken = jwt.verify(token, "booksManagement10")
 
         let findBook = await bookModel.findById(bookId);
         if (findBook) {

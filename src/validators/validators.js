@@ -24,7 +24,7 @@ const isValidISBN=function(value){
  }
 
 const isValidEmail=function(value){
-    if(value.match(/^[a-z0-9_]{3,}@[a-z]{3,}[.]{1}[a-z]{3,6}$/))
+    if(value.match(/^[a-z0-9_]{1,}@[a-z]{3,}[.]{1}[a-z]{3,6}$/))
     return true;
     return false;
 }
@@ -40,18 +40,24 @@ const isValidPin=function(value){
     return false
 }
 function isValidDate(value){
-    return  /^\d{4}\-\d{1,2}\-\d{1,2}$/.test(value);
+    return  (/^\d{4}\-\d{1,2}\-\d{1,2}$/).test(value);
 }
 
 
 
 const isValidRating=function(value){
     
-    return (/^[1-5]{1}.\d{1}$/).test(value)
+    return /^[1-5]{1}(.\d{1})?$/.test(value)
+    
 }
 
+const isValidString=function(value){
+    if (value.match(/^[a-zA-Z0-9\.!@#$%&? ]*$/)) return true;  
+    return false;
+}
 
-module.exports={isValidRating,isValidDate,isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
+//================================= Exported all the functions here ======================================
+module.exports={isValidString,isValidRating,isValidDate,isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
 
 
 

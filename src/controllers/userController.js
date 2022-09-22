@@ -1,9 +1,12 @@
+
+//================================= Imported all the modules here ======================================
 const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken")
 const userModel = require("../models/userModel");
 const bookModel = require("../models/booksModel")
 const { isNotEmpty, isValidName, isValidPhone, isValid, isValidEmail, isValidPass,isstreatValid,isValidPin } = require("../validators/validators")
 
+//================================= CREATE USER post/register ======================================
 const createUser = async function (req, res) {
     try {
         const data = req.body;
@@ -17,8 +20,9 @@ const createUser = async function (req, res) {
                 status(400).
                     send({status:false,msg:"invalid data entry inside request body"})
                     
-        const { title, name, phone, email, password,address } = data;
-//*********************************** Title validation *******************************************
+        const { title, name, phone, email, password,address } = data;  //destructuring
+
+    // ****************** Title validation ***********************    
         if (!title) 
             return res.
                 status(400).
@@ -27,13 +31,14 @@ const createUser = async function (req, res) {
             return res.
                 status(400).
                     send({ status: false, msg: "title is empty" })
-        data.title = data.title.trim();
+        data.title = title.trim();
         let arr = ["Mr", "Mrs", "Miss"]
         if (!arr.includes(data.title)) 
             return res.
                 status(400).
                     send({ status: false, msg: "use only Mr, Mrs, Miss" })
-//****************************** name validation ****************************************
+
+// ****************** Name validation ***********************  
         if (!name)
             return res.
                 status(400).
@@ -42,32 +47,37 @@ const createUser = async function (req, res) {
             return res.
                 status(400).
                     send({ status: false, msg: "name field is empty" });
-        data.name = data.name.trim()
-        if (!isValidName(data.name)) 
+        // data.name = data.name.trim()
+        if (!isValidName(name)) 
             return res.
                 status(400).
                     send({ status: false, msg: "name is not valid" })
-//*************************************** phone validation ***********************************************
+
+// ****************** Phone validation ***********************  
         if (!phone) 
             return res.
                 status(400).
                     send({ status: false, msg: "phone is requried" });
+        if (typeof phone != "string")
+            return res.
+                status(400).
+                send({ status: false, msg: "please provide phone in string format" })
         if (!isNotEmpty(phone)) 
              return res.
                  status(400).
                      send({ status: false, msg: "phone field is empty" });
-        data.phone = data.phone.trim()
-        if (!isValidPhone(data.phone)) 
+        
+        if (!isValidPhone(phone)) 
             return res.
                 status(400).
                     send({ status: false, msg: "mobile number is invalid must be of 10 digits" })
-        let duplicatePhone = await userModel.findOne({ phone: data.phone });
+        let duplicatePhone = await userModel.findOne({ phone: phone });
         if (duplicatePhone)
             return res.
                 status(400).
                     send({ status: false, message: "phone is already present" });
     
-//**************************Email validation*************************************************
+// ****************** Email validation ***********************  
         if (!email) 
             return res.
                 status(400).
@@ -76,19 +86,19 @@ const createUser = async function (req, res) {
             return res.
                 status(400).
                     send({ status: false, message: "email field is empty" });
-        data.email = data.email.trim()
+        // data.email = data.email.trim()
         if (!isValidEmail(email)) 
             return res.
                 status(400).
                     send({ status: false, message: "Email is invalid" })
         
-        let duplicateEmail = await userModel.findOne({ email: data.email });
+        let duplicateEmail = await userModel.findOne({ email: email });
         if (duplicateEmail) 
             return res.
                 status(400).
                     send({ status: false, message: "Email is already present" });
         
-//*********************************** Password Validation *******************************
+// ****************** Password validation ***********************  
         if (!password) 
             return res.
                 status(400).
@@ -99,13 +109,13 @@ const createUser = async function (req, res) {
                 status(400).
                     send({ status: false, msg: "password is empty" })
         
-        data.password = password.trim()
-        if (!isValidPass(data.password)) 
+        // data.password = password.trim()
+        if (!isValidPass(password)) 
             return res.
                 status(400).
                     send({ status: false, msg: "Please enter a valid password" })
 
-                    
+// ****************** Address validation ***********************                      
         if(address){
             if(Object.keys(address).length==0)
                 return res.
@@ -128,7 +138,7 @@ const createUser = async function (req, res) {
                         return res.
                             status(400).
                                 send({status:false,msg:"street is invalid"})
-                data.address.street=street.trim()
+                // data.address.street=street.trim()
                 }if(city){
                     if (!isNotEmpty(city)) 
                         return res.
@@ -138,7 +148,7 @@ const createUser = async function (req, res) {
                         return res.
                             status(400).
                                 send({status:false,msg:"city name is not valid"})
-                data.address.city=city.trim()
+                // data.address.city=city.trim()
                 }if(pincode){
                     if (!isNotEmpty(pincode)) 
                         return res.
@@ -148,7 +158,7 @@ const createUser = async function (req, res) {
                         return res.
                             status(400).
                                 send({status:false,msg:"pincode must contain only digit with 6 length"})
-                data.address.pincode=pincode.trim()
+                // data.address.pincode=pincode.trim()
                 }
             }
             
@@ -166,6 +176,7 @@ const createUser = async function (req, res) {
     }
 }
 
+//================================= User Login post/login ======================================
 const userLogin = async function (req, res) {
     try {
         let requestbody = req.body
@@ -186,7 +197,9 @@ const userLogin = async function (req, res) {
                 status(400).
                     send({ status: false, msg: "Invalid request in request body" })
 
-        const { email, password } = requestbody
+        const { email, password } = requestbody  //destructuring
+
+// ****************** Email validation ***********************          
         if (!email)
             return res.
                 status(400).
@@ -197,6 +210,7 @@ const userLogin = async function (req, res) {
                 status(400).
                     send({ status: false, msg: "Email is invalid" })
 
+ // ****************** Password validation ***********************  
         if (!password)
             return res.
                 status(400).
@@ -205,18 +219,18 @@ const userLogin = async function (req, res) {
         if (!isValidPass(password))
             return res.
                 status(400).
-                    send({ status: false, msg: "password is Allowed with lenght 8-15 only" })
-        const result = await userModel.findOne({ email: email, password: password })
-        if (!result)
+                    send({ status: false, msg: "password is Allowed with lenght 8-15 only" });
+
+        const loggedInUser = await userModel.findOne({ email: email, password: password })
+        if (!loggedInUser)
             return res.
                 status(404).
                     send({ status: false, msg: "User is not Exist" })
 
-// ************************* Token Creation *****************************************************
-        
-        const token = jwt.sign({ userId: result._id.toString() },
-            "booksManagement17", { expiresIn: '5000s' })
-        res.header("x-auth-token", token)
+//++++++++++ Token creation ++++++++++++++++ 
+        const token = jwt.sign({ userId: loggedInUser._id.toString() },
+            "booksManagement10", { expiresIn: '5000s'})
+        // res.header("x-api-key", token)
         res.
             status(200).
                 send({ status: true, message: "Token has created", token: token })
@@ -228,5 +242,6 @@ const userLogin = async function (req, res) {
 }
 
 
+//================================= Exported all the functions here ======================================
 module.exports = { createUser, userLogin };
 
