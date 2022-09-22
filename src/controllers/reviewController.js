@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken")
 const userModel = require("../models/userModel");
 const bookModel = require("../models/booksModel")
-const { isValidRating, date, isNotEmpty, isValidName } = require("../validators/validators")
+const { isValidRating, isValidDate, isNotEmpty, isValidName } = require("../validators/validators")
 const reviewModel = require("../models/reviewModel")
 
 const createReview = async function (req, res) {
@@ -42,7 +42,7 @@ const createReview = async function (req, res) {
             return res.
                 status(400).
                 send({ status: false, msg: "reviewedAt is required" })
-        if (!date(reviewedAt))
+        if (!isValidDate(reviewedAt))
             return res.
                 status(400).
                 send({ status: false, msg: "it contain only YYYY-MM-DD formate" })
