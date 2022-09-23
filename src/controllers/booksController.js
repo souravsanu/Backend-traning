@@ -1,6 +1,5 @@
 //================================= Imported all the modules here ======================================
 const mongoose = require('mongoose');
-const jwt = require("jsonwebtoken")
 const userModel = require("../models/userModel");
 const bookModel = require("../models/booksModel")
 const {isValid,isValidString,isValidBody,  isValidDate, isValidName, isValidISBN } = require("../validators/validators");

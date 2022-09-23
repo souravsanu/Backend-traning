@@ -1,9 +1,7 @@
 //================================= Imported all the modules here ======================================
 const mongoose = require('mongoose');
-const jwt = require("jsonwebtoken")
-const userModel = require("../models/userModel");
 const bookModel = require("../models/booksModel")
-const { isValidString,isValidRating, isValidDate,isValid, isValidName } = require("../validators/validators")
+const { isValidString,isValidRating,isValid, isValidName } = require("../validators/validators")
 const reviewModel = require("../models/reviewModel")
 
 //================================= CREATE REVIEW post/books/:bookId/review ======================================
@@ -126,7 +124,7 @@ if(!Object.keys(reqbody)) return res.send({status:false,msg:"Please provide data
 // ****************** review validation ***********************     
     if (Object.keys(reqbody).some(a => a == "review")) {
         if (!review) return res.status(400).send({ status: false, msg: "review is required" });
-        if (!isNotEmpty(review)) return res.status(400).send({  status: false,msg: "review is empty" })
+        if (!isValid(review)) return res.status(400).send({  status: false,msg: "review is empty" })
         if (!isValidString(review)) return res.status(400).send({ status: false, msg: "Type of review must be string" });
      
     }
@@ -139,7 +137,7 @@ if(!Object.keys(reqbody)) return res.send({status:false,msg:"Please provide data
 // ****************** reviewedBy validation ***********************  
     if (Object.keys(reqbody).some(a => a == "reviewedBy")) {
         if (!reviewedBy) return res.status(400).send({ status: false, msg: "reviewedBy is required" });
-        if (!isNotEmpty(reviewedBy)) return res.status(400).send({ status: false, msg: "reviewedBy is empty" })
+        if (!isValid(reviewedBy)) return res.status(400).send({ status: false, msg: "reviewedBy is empty" })
         if (!isValidName(reviewedBy)) return res.status(400).send({ status: false, msg: "Type of reviewedBy must be string" });
 
     }

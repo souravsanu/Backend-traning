@@ -3,7 +3,6 @@
 const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken")
 const userModel = require("../models/userModel");
-const bookModel = require("../models/booksModel")
 const { isValidName, isValidPhone, isValid, isValidEmail, isValidPass,isstreatValid,isValidPin } = require("../validators/validators")
 
 //================================= CREATE USER post/register ======================================
