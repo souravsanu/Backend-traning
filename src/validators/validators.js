@@ -1,9 +1,4 @@
-const isNotEmpty=function(value){
-    if(value.trim().length!=0)
-    return true; 
-    return false;
 
-}
 const isValid = function (value) {
     if (typeof value === "undefined" || value === null || value==" ") return false;
     if (typeof value === "string" && value.trim().length > 0) return true;
@@ -40,7 +35,7 @@ const isValidPin=function(value){
     return false
 }
 function isValidDate(value){
-    return  (/^\d{4}\-\d{1,2}\-\d{1,2}$/).test(value);
+    return /^(?!0000)\d{4}-(?!00)[0-1]{1}[0-2]{1}-(?!00)(?!33)(?!32)(?!34)(?!35)(?!36)(?!37)(?!38)(?!39)[0-3]{1}\d{1}$/.test(value)
 }
 
 
@@ -55,9 +50,12 @@ const isValidString=function(value){
     if (value.match(/^[a-zA-Z0-9\.!@#$%&? ]*$/)) return true;  
     return false;
 }
+const isValidBody = function (value) {
+    return Object.keys(value).length > 0;
+  };
 
 //================================= Exported all the functions here ======================================
-module.exports={isValidString,isValidRating,isValidDate,isNotEmpty,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
+module.exports={isValidBody,isValidString,isValidRating,isValidDate,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
 
 
 

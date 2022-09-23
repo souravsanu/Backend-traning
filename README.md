@@ -320,6 +320,3 @@ Refer below sample
 
 
 
-rating regex only takes decimal values
-
-review ,title regex
