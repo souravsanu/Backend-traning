@@ -1,4 +1,3 @@
-
 //================================= Imported all the modules here ======================================
 const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken")
@@ -19,57 +18,55 @@ const createUser = async function (req, res) {
       if(Object.keys(data).length>6)
             return res.
                 status(400).
-                    send({status:false,msg:"invalid data entry inside request body"})
+                    send({status:false,message:"invalid data entry inside request body"})
      
     //destructuring
         const { title, name, phone, email, password,address } = data;  
 
     // ****************** Title validation ***********************    
+        
         if (!title) 
             return res.
                 status(400).
-                    send({ status: false, msg: "title is requried" })
+                    send({ status: false, message: "title is requried" })
         if (!isValid(title)) 
             return res.
                 status(400).
-                    send({ status: false, msg: "title is empty" })
+                    send({ status: false, message: "title is empty" })
         data.title = title.trim();
         let arr = ["Mr", "Mrs", "Miss"]
         if (!arr.includes(data.title)) 
             return res.
                 status(400).
-                    send({ status: false, msg: "use only Mr, Mrs, Miss" })
+                    send({ status: false, message: "use only Mr, Mrs, Miss" })
 
 // ****************** Name validation ***********************  
+        
         if (!name)
             return res.
                 status(400).
-                    send({ status: false, msg: "name is requried" });
-        // if (!isValid(name)) 
-        //     return res.
-        //         status(400).
-        //             send({ status: false, msg: "name field is empty" });
-        
+                    send({ status: false, message: "name is requried" });
         if (!isValidName(name)) 
             return res.
                 status(400).
-                    send({ status: false, msg: "name is not valid" })
+                    send({ status: false, message: "name is not valid" })
 
 // ****************** Phone validation ***********************  
+        
         if (!phone) 
             return res.
                 status(400).
-                    send({ status: false, msg: "phone is requried" });
+                    send({ status: false, message: "phone is requried" });
         if (typeof phone == "string") {
             if (!isNotEmpty(phone))
                 return res.
                     status(400).
-                    send({ status: false, msg: "phone field is empty" });
+                    send({ status: false, message: "phone field is empty" });
 
             if (!isValidPhone(phone))
                 return res.
                     status(400).
-                    send({ status: false, msg: "mobile number is invalid must be of 10 digits" })
+                    send({ status: false, message: "mobile number is invalid must be of 10 digits start from [6-9]" })
         }
         let duplicatePhone = await userModel.findOne({ phone: phone });
         if (duplicatePhone)
@@ -78,6 +75,7 @@ const createUser = async function (req, res) {
                 send({ status: false, message: "phone is already present" });
 
 // ****************** Email validation ***********************  
+        
         if (!email) 
             return res.
                 status(400).
@@ -96,22 +94,24 @@ const createUser = async function (req, res) {
                     send({ status: false, message: "Email is already present" });
         
 // ****************** Password validation ***********************  
+        
         if (!password) 
             return res.
                 status(400).
-                    send({ status: false, msg: "password is requried" })  
+                    send({ status: false, message: "password is requried" })  
          data.password = password.trim()
         if (!isValidPass(data.password)) 
             return res.
                 status(400).
-                    send({ status: false, msg: "Please enter a valid password" })
+                    send({ status: false, message: "Please enter a valid password" })
 
 // ****************** Address validation ***********************                      
+        
         if(address){
             if(Object.keys(address).length==0)
                 return res.
                     status(400).
-                        send({status:false,msg:"Address must contain something"})
+                        send({status:false,message:"Address must contain something"})
             else{
             const {street,city,pincode}=address
             if(!(isValid(street) || isValid(city) || isValid(pincode))){
@@ -159,6 +159,7 @@ const createUser = async function (req, res) {
 }
 
 //================================= User Login post/login ======================================
+
 const userLogin = async function (req, res) {
     try {
         let requestbody = req.body
@@ -167,49 +168,53 @@ const userLogin = async function (req, res) {
         if (Object.keys(querybody).length > 0)
             return res.
                 status(400).
-                    send({ status: false, msg: "Invalid request in queryParams" })
+                    send({ status: false, message: "Invalid request in queryParams" })
 
         if (Object.keys(requestbody).length == 0)
             return res.
                 status(400).
-                    send({ status: false, msg: "Data is required in request body" })
+                    send({ status: false, message: "Data is required in request body" })
 
         if (Object.keys(requestbody).length > 2)
             return res.
                 status(400).
-                    send({ status: false, msg: "Invalid request in request body" })
-
-        const { email, password } = requestbody  //destructuring
+                    send({ status: false, message: "Invalid request in request body" })
+    //destructuring
+        
+        const { email, password } = requestbody  
 
 // ****************** Email validation ***********************          
+        
         if (!email)
             return res.
                 status(400).
-                    send({ status: false, msg: "Email is required" })
+                    send({ status: false, message: "Email is required" })
 
         if (!isValidEmail(email))
             return res.
                 status(400).
-                    send({ status: false, msg: "Email is invalid" })
+                    send({ status: false, message: "Email is invalid" })
 
  // ****************** Password validation ***********************  
+        
         if (!password)
             return res.
                 status(400).
-                    send({ status: false, msg: "password is required" })
+                    send({ status: false, message: "password is required" })
 
         if (!isValidPass(password))
             return res.
                 status(400).
-                    send({ status: false, msg: "password is Allowed with lenght 8-15 only" });
+                    send({ status: false, message: "password is Allowed with lenght 8-15 only" });
 
         const loggedInUser = await userModel.findOne({ email: email, password: password })
         if (!loggedInUser)
             return res.
                 status(404).
-                    send({ status: false, msg: "User is not Exist" })
+                    send({ status: false, message: "User is not Exist" })
 
 //++++++++++ Token creation ++++++++++++++++ 
+        
         const token = jwt.sign({ userId: loggedInUser._id.toString() },
             "booksManagementGroup10", { expiresIn: '1h'}           
            )
@@ -226,5 +231,6 @@ const userLogin = async function (req, res) {
 
 
 //================================= Exported all the functions here ======================================
+
 module.exports = { createUser, userLogin };
 

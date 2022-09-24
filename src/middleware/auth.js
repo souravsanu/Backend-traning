@@ -1,4 +1,3 @@
-
 const jwt = require("jsonwebtoken")
 const { default: mongoose } = require("mongoose")
 const BookModel = require("../models/booksModel")
@@ -8,10 +7,13 @@ const BookModel = require("../models/booksModel")
 const authentication = async function (req, res, next) {
     try {
         let token = req.headers["x-api-key"]
-        if (!token) return res.status(400).send({ status: false, message: "Token required" })
+        if (!token)
+            return res.
+                status(400).
+                    send({ status: false, message: "Token required" })
 
-        // console.log(token)
-
+    // Token verification and expiry checking
+        
         jwt.verify(token, "booksManagementGroup10", (error, decodedToken) => {
             if (error) {
                 return res.
@@ -19,9 +21,8 @@ const authentication = async function (req, res, next) {
                 send({ status: false, message: "token is invalid"} );
 
             }
-            req["decodedToken"] = decodedToken    //this line for we can access this token outside the middleware
-
-            // console.log(decodedToken )
+            //this line for we can access this token outside the middleware
+            req["decodedToken"] = decodedToken    
 
             next()
 
@@ -42,12 +43,22 @@ const authorization = async function (req, res, next) {
        const data=req.body;
        if(bookId){
         if (!mongoose.Types.ObjectId.isValid(bookId)) 
-              return res.status(400).send({ status: false, message: "Please enter correct bookId" })
+              return res.
+                status(400).
+                    send({ status: false, message: "Please enter correct bookId" })
               let bookData = await BookModel.findById(bookId)
 
-              if (bookData === null) return res.status(404).send({ status: false, message: "bookId does not exist" })
+              if (!bookData)
+                return res.
+                    status(404).
+                        send({ status: false, message: "bookId does not exist" })
              
-              if(bookData.userId!=loggedInUserId)return res.status(403).send({ status: false, message: "You are not authorised" })
+        // Authorization checking
+              
+            if(bookData.userId!=loggedInUserId)
+                return res.
+                    status(403).
+                        send({ status: false, message: "You are not authorised" })
        }else{
         if (data.userId != loggedInUserId) {
             return res.status(403).send({ status: false, message: "You are not authorised" })
