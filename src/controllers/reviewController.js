@@ -1,7 +1,7 @@
 //================================= Imported all the modules here ======================================
 const mongoose = require('mongoose');
 const bookModel = require("../models/booksModel")
-const { isValidString,isValidRating,isValid, isValidName } = require("../validators/validators")
+const { isValidString,isValidRating,isValid, isValidName, isValidDate } = require("../validators/validators")
 const reviewModel = require("../models/reviewModel")
 
 //================================= CREATE REVIEW post/books/:bookId/review ======================================
@@ -25,7 +25,7 @@ const createReview = async function (req, res) {
             return res.
                 status(400).
                 send({ status: false, message: "Id is not valid" })
-        let data = await bookModel.find({ _id: BookId, isDeleted: false })
+        let data = await bookModel.findOne({ _id: BookId, isDeleted: false })
         if (!data)
             return res.
                 status(404).
@@ -33,7 +33,9 @@ const createReview = async function (req, res) {
         
         // Destructreing
         
-        const { reviewedBy, rating, review } = requestbody
+        const { reviewedBy, rating, review,reviewedAt } = requestbody
+       
+
         if(reviewedBy){
         if (!reviewedBy)
             return res.
@@ -74,22 +76,35 @@ const createReview = async function (req, res) {
             return res.
                 status(400).
                 send({ status: false, message: "review is not valid" })
-           
+          
+        if (!reviewedAt)
+            return res.
+                status(400).
+                send({ status: false, message: "reviewedAt is required" })
+        if (!isValidDate(reviewedAt))
+            return res.
+                status(400).
+                send({ status: false, message: "reviewedAt is Invalid" })
 
         let obj = {
-
             bookId: BookId,
             reviewedBy: reviewedBy,
             reviewedAt: Date.now(),
             rating: rating,
             review: review
         }
-        let b = await bookModel.findByIdAndUpdate({ _id: BookId }, { $inc: { reviews: 1 } })
-        let result = await reviewModel.create(obj)
+        let book = await bookModel.findByIdAndUpdate({ _id: BookId }, { $inc: { reviews: 1 } });
+        
+        let result = await reviewModel.create(obj);
+        let reviewData=await reviewModel.find({bookId: BookId}).select({  isDeleted:0,
+        createdAt: 0,
+        updatedAt:0,
+        __v: 0})
+
 
         res.
             status(201).
-            send({ status: true, message: "review is successfully created", data: {reviewsData:result} })
+            send({ status: true, message: "review is successfully created", data:{book,reviewsData:reviewData}})
 
     } catch (error) {
         res.
@@ -97,7 +112,6 @@ const createReview = async function (req, res) {
             send({ status: false, msg: error.message })
     }
 }
-
 
 //================================= UPDATE REVIEWs put/books/:bookId/review/:reviewId ======================================
 

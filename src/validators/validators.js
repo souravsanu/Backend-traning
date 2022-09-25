@@ -4,7 +4,7 @@ const isValid = function (value) {
     if (typeof value === "string" && value.trim().length > 0) return true;
     return false;
 }
-const isstreatValid = function (value) {
+const isStreetValid = function (value) {
     return (/^[\s]*[a-zA-Z-0-9,]+([\s]?[a-zA-Z-0-9]+)*[\s]*$/.test(value))
 }
 const isValidName = function (value) {
@@ -35,9 +35,8 @@ const isValidPin=function(value){
     return false
 }
 function isValidDate(value){
-    return /^(?!0000)\d{4}-(?!00)[0-1]{1}[0-2]{1}-(?!00)(?!33)(?!32)(?!34)(?!35)(?!36)(?!37)(?!38)(?!39)[0-3]{1}\d{1}$/.test(value)
+    return /^(?!0000)\d{4}-(?!00)(?!13)(?!14)(?!15)(?!16)(?!17)(?!18)(?!19)[0-1]{1}\d{1}-(?!00)(?!33)(?!32)(?!34)(?!35)(?!36)(?!37)(?!38)(?!39)[0-3]{1}\d{1}$/.test(value)
 }
-
 
 
 const isValidRating=function(value){
@@ -55,7 +54,7 @@ const isValidBody = function (value) {
   };
 
 //================================= Exported all the functions here ======================================
-module.exports={isValidBody,isValidString,isValidRating,isValidDate,isValidName,isValidPhone,isValidEmail,isValidPass,isstreatValid,isValidPin,isValid,isValidISBN}
+module.exports={isValidBody,isValidString,isValidRating,isValidDate,isValidName,isValidPhone,isValidEmail,isValidPass,isStreetValid,isValidPin,isValid,isValidISBN}
 
 
 

@@ -60,6 +60,16 @@ const authorization = async function (req, res, next) {
                     status(403).
                         send({ status: false, message: "You are not authorised" })
        }else{
+           if (!data.userId)
+               return res.
+                   status(400).
+                   send({ status: false, message: "userId is required" });
+           if (!mongoose.isValidObjectId(data.userId))
+               return res.
+                   status(400).
+                   send({ status: flase, message: "userId is Invalid" });
+
+        
         if (data.userId != loggedInUserId) {
             return res.status(403).send({ status: false, message: "You are not authorised" })
         }

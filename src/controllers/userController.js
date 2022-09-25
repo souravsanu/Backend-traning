@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken")
 const userModel = require("../models/userModel");
-const { isValidName, isValidPhone, isValid, isValidEmail, isValidPass,isstreatValid,isValidPin } = require("../validators/validators")
+const { isValidName, isValidPhone, isValid, isValidEmail, isValidPass,isStreetValid,isValidPin } = require("../validators/validators")
 
 //================================= CREATE USER post/register ======================================
 const createUser = async function (req, res) {
@@ -58,11 +58,6 @@ const createUser = async function (req, res) {
                 status(400).
                     send({ status: false, message: "phone is requried" });
         if (typeof phone == "string") {
-            if (!isNotEmpty(phone))
-                return res.
-                    status(400).
-                    send({ status: false, message: "phone field is empty" });
-
             if (!isValidPhone(phone))
                 return res.
                     status(400).
@@ -122,7 +117,7 @@ const createUser = async function (req, res) {
             else{
                 if(street){
                    
-                    if(!isstreatValid(street))
+                    if(!isStreetValid(street))
                         return res.
                             status(400).
                                 send({status:false,msg:"street is invalid"})
@@ -210,8 +205,8 @@ const userLogin = async function (req, res) {
         const loggedInUser = await userModel.findOne({ email: email, password: password })
         if (!loggedInUser)
             return res.
-                status(404).
-                    send({ status: false, message: "User is not Exist" })
+                status(401).
+                    send({ status: false, message: "Wrong Credentials" })
 
 //++++++++++ Token creation ++++++++++++++++ 
         

@@ -246,7 +246,11 @@ const getBooksByQuery = async function (req, res) {
         // ****************** find books ***********************  
         
         const books = await bookModel.find({ isDeleted: false, ...queryParams }).select({ title: 1, _id: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
-        books.sort((a, b) => a.title.localeCompare(b.title))
+        books.sort((a, b) => a.title.localeCompare(b.title));
+      if (books.length == 0)
+        return res.
+          status(404).
+          send({ status: false, message: "No book found" })
         return res.
           status(200).
             send({ status: true, message: "Books list", data: books })

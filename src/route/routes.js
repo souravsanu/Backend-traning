@@ -23,5 +23,8 @@ router.post("/books/:bookId/review",reviewController.createReview)
 router.put("/books/:bookId/review/:reviewId",reviewController.updateReviews);
 router.delete("/books/:bookId/review/:reviewId",reviewController.deleteReview)
 
+router.all("/*", function (req, res) {
+    res.status(400).send({ status: false, message: "invalid http request" });
+  });
 
 module.exports=router;
