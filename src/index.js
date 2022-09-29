@@ -1,9 +1,11 @@
 const express=require('express')
+const bodyParser = require('body-parser');
 const { default: mongoose } = require('mongoose')
-const route=require('./routes/route.js')
+const route=require("./routes/route")
 const app= express()
 
-app.use(express.json())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect("mongodb+srv://anubhav0347:anubhav0347@cluster0.ndyglrb.mongodb.net/group39Database", {useNewUrlParser:true})
 .then(()=> console.log("MongoDb is connected"))
@@ -11,6 +13,6 @@ mongoose.connect("mongodb+srv://anubhav0347:anubhav0347@cluster0.ndyglrb.mongodb
 
 app.use('/',route)
 
-app.listen(3000, function(){
-    console.log('Express is running on port 3000')
-})
+app.listen(process.env.PORT || 3000, function () {
+    console.log('Express app running on port ' + (process.env.PORT || 3000))
+});
