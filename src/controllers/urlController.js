@@ -65,27 +65,22 @@ const createUrl = async function (req, res) {
 
 
 //=====================================GET URL API=================================================
+// 
 const getUrl = async function (req, res) {
   try {
+      const urlcode = req.params.urlCode
 
-    let urlCode = req.params.urlCode
-
-    let data=req.body
-
-    if(data)return res.status(400).send({ status: false, message: "you cant provide data in get body!" });
-
-    if (!shortId.isValid(urlCode)) return res.status(400).send({ status: false, message: `Invalid urlCode: - ${urlCode}` })
-
-    let url = await urlModel.findOne({ urlCode: urlCode }).select({ longUrl: 1, _id: 0 })
-
-    if (!url) return res.status(404).send({ status: false, message: `${urlCode} urlCode not found` })
-
-    return res.status(302).send({ status: true, message: url })
+     // if (!shortId.isValid(urlCode)) return res.status(400).send({ status: false, message: "Invalid urlCode"})
 
 
-  } catch (err) {
-    return res.status(500).send({ status: false, message: err.message })
-
+      const getUrlList = await urlModel.findOne({ urlCode: urlcode }).select({ _id: 0, longUrl: 1, shortUrl: 1, urlCode: 1 })
+      if (!getUrlList) {
+          return res.status(404).send({status : false, message : "No data found with this urlCode!"})
+      }
+      return res.status(302).redirect(getUrlList.longUrl)
+  }
+  catch (err) {
+      res.status(500).send({ status: false, message: "Server Error", error: err.message })
   }
 }
 
