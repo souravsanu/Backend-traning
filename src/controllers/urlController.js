@@ -131,15 +131,24 @@ const createUrl = async function (req, res) {
 //=====================================GET URL API=================================================
 // 
 
+//____________________REGEX for Url code_____________
+const isValidUrl = function (str) {
+  var pattern = new RegExp(/^[a-z0-9_-]*$/);
+  if (pattern.test(str)) return true;
+};
+
+//_______________________________________________________________
 const getUrl = async function (req, res) {
   try {
     let urlCode = req.params.urlCode
 
    //_________it will check short url __//
-    if (!shortId.isValid(urlCode)) {
-      return res.status(400).send({ status: false, message: "Sorry! Wrong urlCode. Provide valid UrlCode" })
-    }
   
+    if (!shortId.isValid(urlCode) && !isValidUrl(urlCode)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Sorry! Wrong urlCode. Provide valid UrlCode" });
+    }
 
     let getUrlCachedData = await GET_ASYNC(`${urlCode}`)
 
