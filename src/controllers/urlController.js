@@ -20,6 +20,7 @@ const isValid = function (value) {
 
 
 
+
 //______________________connecting to redis_________________________
 
 
@@ -62,23 +63,16 @@ const createUrl = async function (req, res) {
 //_______________check long url________________________________//
 
     if (!isValid(longUrl)) { return res.status(400).send({ status: false, msg: "longurl is not valid " }) };
-    //__________ _________________Axios call__________________//
     
-    
-    if (longUrl) {
-      var validLink = false  //____flag______//
-      await axios.get(longUrl)
-        .then((res) => {
-          if (res.status == 200 || res.status == 201)
-            validLink = true;
-        })
-        .catch((error) => { validLink = false })
-      if (validLink == false)
-        return res.status(400).send({ status: false, message: "Invalid url or may be Private Url. Please enter valid and public url !" })
-    }
+    let reg =
+    /^(https:\/\/www\.|http:\/\/www\.|www\.|https:\/\/|http:\/\/)[^www.,-_][a-zA-Z0-9\-_.$]+\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/[^\s]*)$/gm;
+  let regex = reg.test(longUrl);
 
-
-    if (!isValid(longUrl)) { return res.status(400).send({ status: false, msg: "longurl is not valid " }) };
+  if (regex === false) {
+    return res
+      .status(400)
+      .send({ status: false, msg: "Please Enter a valid URL." });
+  }
 
     let getcache = await GET_ASYNC(`${longUrl}`)
 
@@ -145,7 +139,7 @@ const getUrl = async function (req, res) {
     if (!shortId.isValid(urlCode)) {
       return res.status(400).send({ status: false, message: "Sorry! Wrong urlCode. Provide valid UrlCode" })
     }
-
+  
 
     let getUrlCachedData = await GET_ASYNC(`${urlCode}`)
 
