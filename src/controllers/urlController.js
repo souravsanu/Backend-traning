@@ -3,8 +3,25 @@ const validUrl = require("valid-url");
 const shortId = require("shortid");
 const baseURL = "http://localhost:3000";
 const redis = require("redis")
+const axios = require("axios")
 const { promisify } = require("util");
 const { json } = require("body-parser");
+
+//________________validation function_________________________________//
+
+const isValidRequest = function (object) {
+  return Object.keys(object).length > 0;
+};
+const isValid = function (value) {
+  if (typeof value === 'undefined' || value === null) return false
+  if (typeof value === 'string' && value.trim().length === 0) return false
+  return true
+}
+
+
+
+//______________________connecting to redis_________________________
+
 
 const redisClient = redis.createClient(
   14556,
@@ -21,22 +38,10 @@ redisClient.on("connect", async function () {
 
 
 
-//1. connect to the server
-//2. use the commands :
-
-//Connection setup for redis
 
 const SET_ASYNC = promisify(redisClient.SET).bind(redisClient);
 const GET_ASYNC = promisify(redisClient.GET).bind(redisClient);
 
-const isValidRequest = function (object) {
-  return Object.keys(object).length > 0;
-};
-const isValid = function (value) {
-  if (typeof value === 'undefined' || value === null) return false
-  if (typeof value === 'string' && value.trim().length === 0) return false
-  return true
-}
 
 //=====================================CREATE URL API=============================================
 
@@ -47,36 +52,54 @@ const createUrl = async function (req, res) {
 
     if (isValidRequest(req.query)) return res.status(400).send({ status: false, message: "Data can passes only through Body" });
 
-
+    //___________________________if body is empty___________________________
 
     if (!isValidRequest(data))
       return res.status(400).send({ status: false, message: "Data required in request body it cant be empty!" });
 
     if (!isValid(data)) return res.status(400).send({ status: false, message: "body is empty" });
 
+//_______________check long url________________________________//
 
-
-    if (!validUrl.isUri(longUrl)) { return res.status(400).send({ status: false, msg: "longurl is not valid" }) };
-
-    let getcache = await GET_ASYNC(`${longUrl}`)
-    if (getcache) {
-      getcache = JSON.parse(getcache)
-      return res.status(409).send({ status: false, message: "URL is fron cache ", data: getcache })
+    if (!isValid(longUrl)) { return res.status(400).send({ status: false, msg: "longurl is not valid " }) };
+    //__________ _________________Axios call__________________//
+    
+    
+    if (longUrl) {
+      var validLink = false  //____flag______//
+      await axios.get(longUrl)
+        .then((res) => {
+          if (res.status == 200 || res.status == 201)
+            validLink = true;
+        })
+        .catch((error) => { validLink = false })
+      if (validLink == false)
+        return res.status(400).send({ status: false, message: "Invalid url or may be Private Url. Please enter valid and public url !" })
     }
 
 
+    if (!isValid(longUrl)) { return res.status(400).send({ status: false, msg: "longurl is not valid " }) };
+
+    let getcache = await GET_ASYNC(`${longUrl}`)
+
+    if (getcache) {
+      getcache = JSON.parse(getcache) 
+      return res.status(201).send({ status: true, message: "URL is fron cache ", data: getcache })
+    }
+//________________________D.B call_______________________________//
     const checklongUrl = await urlModel.findOne({ longUrl: longUrl }).select({ _id: 0, longUrl: 1, shortUrl: 1, urlCode: 1 })
 
     if (checklongUrl) {
       //return res.status(400).send({ status: false, message: "URL is not present" })
       await SET_ASYNC(`${longUrl}`, JSON.stringify(checklongUrl), 'EX', 60 * 2);
-      return res.status(200).send({ status: false, message: "URL is already present ", data: checklongUrl })
+      return res.status(201).send({ status: true, message: "URL is already present ", data: checklongUrl })
     }
 
 
 
 
-    // shortcode is generated
+    // _________it is used to create unique id___________//
+
     const codeUrl = shortId.generate(longUrl).toLowerCase()
 
     // console.log(codeUrl)
@@ -118,21 +141,32 @@ const getUrl = async function (req, res) {
   try {
     let urlCode = req.params.urlCode
 
+   //_________it will check short url __//
+    if (!shortId.isValid(urlCode)) {
+      return res.status(400).send({ status: false, message: "Sorry! Wrong urlCode. Provide valid UrlCode" })
+    }
+
+
     let getUrlCachedData = await GET_ASYNC(`${urlCode}`)
 
+    //console.log(longUrl)
     if (getUrlCachedData) {
+
+      const longUrl = JSON.parse(getUrlCachedData)
       console.log("Data from Redis")
-      res.status(302).redirect(getUrlCachedData)
+
+      res.status(302).redirect(longUrl)
     }
     else {
-      let url = await urlModel.findOne({ urlCode: urlCode }).select({ _id: 0, longUrl: 1 });
 
+      let url = await urlModel.findOne({ urlCode: urlCode }).select({ _id: 0, longUrl: 1 });
       if (!url) {
         return res.status(404).send({ status: false, message: 'No data found with this url' })
       }
 
-      await SET_ASYNC(`${urlCode}`, JSON.stringify(url.longUrl), 'EX', 60 * 10)
+      await SET_ASYNC(`${urlCode}`, JSON.stringify(url.longUrl), 'EX', 60 * 2)
       console.log("Fetching Data from DB")
+
       res.status(302).redirect(url.longUrl);
     }
   }
