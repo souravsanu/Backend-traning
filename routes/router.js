@@ -6,7 +6,6 @@ const adminController = require("../controller/adminController.js")
 const auth = require("../middleware/auth.js")
 //const commonMW = require('../middleware/auth')
 
-
 // post login Admin
 router.post("/registerAdmin", adminController.adminRegister)
 router.post("/logInAdmin",adminController.logInAdmin)

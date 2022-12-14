@@ -88,40 +88,10 @@ if (!isValidEmail(email)) {
     })
 }
 
-
 if (!isValidPwd(password))
 return res.status(400).send({status: false,message:
 "Password should be 8-15 characters long and must contain one of 0-9,A-Z,a-z and special characters",
 });
 
-     
-
-let CheckUser = await adminModel.findOne({email :email, password : password})
    
-     if(CheckUser){
-        req.adminId = CheckUser._id
-     //   console.log(req)
-        let token = jwt.sign(
-            {
-                adminId: CheckUser._id.toString(),
-                batch: "Plutonium",
-                organisation: "tailwebBackendTaskProject, Plutonium-Batch"
-            },
-            "Admin-student-login-panel", {
-
-            expiresIn: '10h' // expires in 1m minits
-
-        });
-        return res.status(201).send({ status: true,message: "logIn successfully", message: token })
-    } 
-        else{
-        return res.status(400).send({status : false , message :" please register before login in "})
-     }
-
-    }catch(error){
-        res.status(500).send({status : false , message : error.message})
-    }
-} 
-
-
-module.exports = {adminRegister,logInAdmin}
+     
