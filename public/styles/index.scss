@@ -20,6 +20,9 @@ $fsize: 16px;
   padding: 0;
   box-sizing: border-box;
   font-family: $font-text;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }
 main {
   position: absolute;
@@ -75,6 +78,7 @@ main {
         letter-spacing: 0.5px;
         font-weight: 600;
         margin-bottom: 15px;
+        // text-align: right;
       }
     }
     div.chat-window {
@@ -82,8 +86,9 @@ main {
       border-radius: 10px;
       background-color: $dark-grey;
       div.chats {
-        min-height: 65vh;
+        height: 65vh;
         padding: 20px;
+        overflow-y: auto;
         div.user-join {
           font-size: 0.9rem;
           color: $dark-grey;
@@ -172,3 +177,4 @@ main {
     }
   }
 }
+
