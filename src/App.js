@@ -1,25 +1,72 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+// function counter() {
+const App = () => {
+  const [counter, setcount] = useState(0);
 
-function App() {
+  const handleclick1 = () => {
+    setcount(counter + 1);
+  };
+
+  const handleclick2 = () => {
+    setcount(counter - 1);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "200%",
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        top: "-15%",
+      }}
+    >
+      Counter{" "}
+      <div
+        style={{
+          fontSize: "120%",
+          position: "relative",
+          top: "10vh",
+        }}
+      >
+        {counter}
+      </div>
+      <div className="buttons">
+        <button
+          style={{
+            fontSize: "60%",
+            position: "relative",
+            top: "20vh",
+            marginRight: "5px",
+            backgroundColor: "green",
+            borderRadius: "8%",
+            color: "white",
+          }}
+          onClick={handleclick1}
         >
-          Learn React
-        </a>
-      </header>
+          {" "}
+          +{" "}
+        </button>
+        <button
+          style={{
+            fontSize: "60%",
+            position: "relative",
+            top: "20vh",
+            marginLeft: "5px",
+            backgroundColor: "red",
+            borderRadius: "8%",
+            color: "white",
+          }}
+          onClick={handleclick2}
+        >
+          {" "}
+          -
+        </button>
+      </div>
     </div>
   );
-}
-
+};
 export default App;
