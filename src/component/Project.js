@@ -18,7 +18,7 @@ const Project = () => {
 
   return (
     <div>
-      <h1>Create a Project</h1>
+      <h1>RBL Bank Site Redesign</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
