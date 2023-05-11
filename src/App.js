@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import DataTable from "./Datatable";
+import Addusermodel from "./Addusermodel";
 
-function App() {
+const App = () => {
+  const [users, setUsers] = useState([]);
+  const addUser = (newUser) => {
+    setUsers([...users, newUser]);
+  };
+
+  const deleteuser = (userId) => {
+    const updateUsers = users.filter((user) => user.id !== userId);
+    setUsers(updateUsers);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <DataTable users={users} deleteuser={deleteuser} />
+      <Addusermodel addUser={addUser} />
     </div>
   );
-}
+};
 
 export default App;
